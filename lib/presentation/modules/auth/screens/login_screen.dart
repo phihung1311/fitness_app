@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../core/utils/logger.dart';
+import '../../user/screens/home_screen.dart';
 import '../bloc/form_status.dart';
 import '../bloc/login/login_bloc.dart';
 import '../bloc/login/login_event.dart';
@@ -59,7 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SnackBar(content: Text('Đăng nhập thành công')),
               );
               logDebug('User logged in: ${state.session?.user.email}');
-              // TODO: Điều hướng tới màn hình chính khi có.
+              if (state.status == FormStatus.success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Đăng nhập thành công')),
+                );
+                Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+              }
             }
           },
           builder: (context, state) {
