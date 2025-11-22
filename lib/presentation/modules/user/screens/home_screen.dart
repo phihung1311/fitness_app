@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/center_fab_icon.dart';
 import '../widgets/dashboard_overview.dart';
-import '../widgets/greeting_section.dart';
 import '../widgets/app_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,16 +33,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.green.shade800,
-        elevation: 0,
-        title: Text(
-          _pageTitles[_selectedIndex],
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      drawer: const AppDrawer(),
+      backgroundColor: _selectedIndex == 0 ? Colors.green.shade800 : Colors.white,
+      appBar: _selectedIndex == 0
+          ? null // Ẩn AppBar cho trang chủ để gradient full màn hình
+          : AppBar(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.green.shade800,
+              elevation: 0,
+              title: Text(
+                _pageTitles[_selectedIndex],
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+      drawer: _selectedIndex == 0 ? null : const AppDrawer(), // Ẩn drawer cho trang chủ
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

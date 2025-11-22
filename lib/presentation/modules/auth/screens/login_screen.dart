@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injector.dart';
-import '../../../../core/utils/logger.dart';
 import '../../user/screens/home_screen.dart';
 import '../bloc/form_status.dart';
 import '../bloc/login/login_bloc.dart';
@@ -32,14 +31,23 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(BuildContext context) {
-    final valid = _formKey.currentState?.validate() ?? false;
-    if (!valid) return;
+    // TEST MODE: Tự động đăng nhập với hung@test.com (vẫn gọi API thật)
     context.read<LoginBloc>().add(
           LoginSubmitted(
-            email: _emailController.text,
-            password: _passwordController.text,
+            email: 'hung@test.com',
+            password: '123456', // Hoặc password bạn đã đăng ký
           ),
         );
+    
+    // CODE GỐC (dùng khi muốn nhập tay):
+    // final valid = _formKey.currentState?.validate() ?? false;
+    // if (!valid) return;
+    // context.read<LoginBloc>().add(
+    //       LoginSubmitted(
+    //         email: _emailController.text,
+    //         password: _passwordController.text,
+    //       ),
+    //     );
   }
 
   @override
@@ -54,18 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.errorMessage!)),
               );
-            }
-            if (state.status == FormStatus.success) {
+            } else if (state.status == FormStatus.success) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar(); // optional: tránh spam
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Đăng nhập thành công')),
               );
-              logDebug('User logged in: ${state.session?.user.email}');
-              if (state.status == FormStatus.success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Đăng nhập thành công')),
-                );
-                Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-              }
+
+              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
             }
           },
           builder: (context, state) {
