@@ -49,8 +49,8 @@ class GreetingSection extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.settings, color: Colors.white, size: 26),
-          tooltip: 'Cài đặt',
+          icon: const Icon(Icons.notifications, color: Colors.white, size: 26),
+          tooltip: 'Thông báo',
         ),
       ],
     );
