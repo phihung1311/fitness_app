@@ -40,20 +40,17 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     final query = event.query.toLowerCase();
     List<Food> filtered = state.allFoods;
 
-    // Filter by meal type if selected
     if (state.selectedCategory != null) {
       filtered = filtered
           .where((food) => food.mealType == state.selectedCategory || food.mealType == 'all')
           .toList();
     }
 
-    // Filter by search query
     if (query.isNotEmpty) {
       filtered = filtered
           .where((food) => food.name.toLowerCase().contains(query))
           .toList();
     }
-
     emit(state.copyWith(
       searchQuery: query,
       displayedFoods: filtered,
@@ -65,15 +62,11 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     Emitter<FoodState> emit,
   ) {
     List<Food> filtered = state.allFoods;
-
-    // Filter by meal type
     if (event.category != null) {
       filtered = filtered
           .where((food) => food.mealType == event.category || food.mealType == 'all')
           .toList();
     }
-
-    // Apply search query if exists
     if (state.searchQuery.isNotEmpty) {
       filtered = filtered
           .where((food) => food.name.toLowerCase().contains(state.searchQuery))

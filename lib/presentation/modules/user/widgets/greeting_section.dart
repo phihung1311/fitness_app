@@ -14,7 +14,6 @@ class GreetingSection extends StatelessWidget {
 
   String _getDisplayName() {
     if (userName != null && userName!.isNotEmpty) {
-      // Lấy tên đầu tiên nếu có nhiều từ
       return userName!.split(' ').last;
     }
     return 'Bạn';

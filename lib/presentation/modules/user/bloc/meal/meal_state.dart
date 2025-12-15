@@ -6,6 +6,7 @@ class MealState extends Equatable {
   final int totalCalories;
   final bool isLoading;
   final bool isAdding;
+  final bool isUpdating;
   final String? errorMessage;
   final String? successMessage;
 
@@ -14,6 +15,7 @@ class MealState extends Equatable {
     this.totalCalories = 0,
     this.isLoading = false,
     this.isAdding = false,
+    this.isUpdating = false,
     this.errorMessage,
     this.successMessage,
   });
@@ -23,6 +25,7 @@ class MealState extends Equatable {
     int? totalCalories,
     bool? isLoading,
     bool? isAdding,
+    bool? isUpdating,
     String? errorMessage,
     String? successMessage,
   }) {
@@ -31,6 +34,7 @@ class MealState extends Equatable {
       totalCalories: totalCalories ?? this.totalCalories,
       isLoading: isLoading ?? this.isLoading,
       isAdding: isAdding ?? this.isAdding,
+      isUpdating: isUpdating ?? this.isUpdating,
       errorMessage: errorMessage,
       successMessage: successMessage,
     );
@@ -42,6 +46,7 @@ class MealState extends Equatable {
         totalCalories,
         isLoading,
         isAdding,
+        isUpdating,
         errorMessage,
         successMessage,
       ];

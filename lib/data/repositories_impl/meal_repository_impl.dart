@@ -66,5 +66,23 @@ class MealRepositoryImpl implements MealRepository {
       throw Exception('Lỗi lấy bữa ăn hôm nay: $e');
     }
   }
+
+  @override
+  Future<void> updateMeal({required int mealId, required int weightGrams}) async {
+    try {
+      await _mealApi.updateMeal(mealId: mealId, weightGrams: weightGrams);
+    } catch (e) {
+      throw Exception('Lỗi cập nhật món ăn: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteMeal(int mealId) async {
+    try {
+      await _mealApi.deleteMeal(mealId);
+    } catch (e) {
+      throw Exception('Lỗi xóa món ăn: $e');
+    }
+  }
 }
 

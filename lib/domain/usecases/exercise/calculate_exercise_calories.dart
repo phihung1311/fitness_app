@@ -8,7 +8,6 @@ class CalculateExerciseCalories {
     'advanced': 1.2,
   };
 
-  /// Tính calories cho 1 set dựa trên cân nặng user
   static int calculateCaloriesPerSet({
     required int baseCalories,
     required double userWeight,
@@ -26,7 +25,7 @@ class CalculateExerciseCalories {
     return adjustedCalories.round();
   }
 
-  /// Tính tổng calories cho toàn bộ bài tập
+  // Tính tổng calories cho toàn bộ bài tập
   static int calculateTotalCalories({
     required int caloriesPerSet,
     required int sets,
@@ -34,7 +33,7 @@ class CalculateExerciseCalories {
     return (caloriesPerSet * sets).round();
   }
 
-  /// Tính tổng calories cho workout session
+  // Tính tổng calories cho workout session
   static int calculateWorkoutTotalCalories({
     required List<Map<String, dynamic>> exercises,
     required double userWeight,

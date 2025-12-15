@@ -22,6 +22,8 @@ import '../../domain/usecases/profile/get_profile_metrics.dart';
 import '../../domain/usecases/food/get_foods.dart';
 import '../../domain/usecases/meal/add_meal.dart';
 import '../../domain/usecases/meal/get_today_meals.dart';
+import '../../domain/usecases/meal/update_meal.dart';
+import '../../domain/usecases/meal/delete_meal.dart';
 import '../../domain/usecases/exercise/get_exercises.dart';
 import '../../domain/usecases/exercise/get_exercise_detail.dart';
 import '../../services/storage/token_storage.dart';
@@ -74,6 +76,8 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<GetFoods>(() => GetFoods(injector()))
     ..registerLazySingleton<AddMeal>(() => AddMeal(injector()))
     ..registerLazySingleton<GetTodayMeals>(() => GetTodayMeals(injector()))
+    ..registerLazySingleton<UpdateMeal>(() => UpdateMeal(injector()))
+    ..registerLazySingleton<DeleteMeal>(() => DeleteMeal(injector()))
     ..registerLazySingleton<GetExercises>(() => GetExercises(injector()))
     ..registerLazySingleton<GetExerciseDetail>(() => GetExerciseDetail(injector()));
 }

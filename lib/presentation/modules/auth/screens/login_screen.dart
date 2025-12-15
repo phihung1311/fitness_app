@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../user/screens/home_screen.dart';
+import '../../user/screens/profile/onboarding_profile_screen.dart';
+import '../../../../domain/usecases/profile/get_profile_metrics.dart';
 import '../bloc/form_status.dart';
 import '../bloc/login/login_bloc.dart';
 import '../bloc/login/login_event.dart';
@@ -22,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _checkingOnboarding = false;
 
   @override
   void dispose() {
@@ -31,15 +34,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(BuildContext context) {
-    // TEST MODE: Tự động đăng nhập với hung@test.com (vẫn gọi API thật)
+
     context.read<LoginBloc>().add(
           LoginSubmitted(
             email: 'hung@test.com',
-            password: '123456', // Hoặc password bạn đã đăng ký
+            password: '123456',
           ),
         );
-    
-    // CODE GỐC (dùng khi muốn nhập tay):
+
     // final valid = _formKey.currentState?.validate() ?? false;
     // if (!valid) return;
     // context.read<LoginBloc>().add(
@@ -48,6 +50,35 @@ class _LoginScreenState extends State<LoginScreen> {
     //         password: _passwordController.text,
     //       ),
     //     );
+  }
+
+  Future<void> _navigateAfterLogin(BuildContext context) async {
+    setState(() => _checkingOnboarding = true);
+    try {
+      final metrics = await injector<GetProfileMetrics>()();
+      final needsOnboarding = _needsOnboarding(metrics);
+
+      if (!mounted) return;
+      if (needsOnboarding) {
+        Navigator.of(context).pushReplacementNamed(OnboardingProfileScreen.routeName);
+      } else {
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      }
+    } catch (_) {
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed(OnboardingProfileScreen.routeName);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _checkingOnboarding = false);
+      }
+    }
+  }
+
+  bool _needsOnboarding(metrics) {
+    final hasBasic = (metrics.height ?? 0) > 0 && (metrics.weight ?? 0) > 0;
+    final hasGoal = (metrics.weightGoal ?? 0) > 0 && (metrics.goalType ?? '').isNotEmpty;
+    return !(hasBasic && hasGoal);
   }
 
   @override
@@ -68,11 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SnackBar(content: Text('Đăng nhập thành công')),
               );
 
-              Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+              _navigateAfterLogin(context);
             }
           },
           builder: (context, state) {
-            final isLoading = state.status == FormStatus.loading;
+            final isLoading = state.status == FormStatus.loading || _checkingOnboarding;
             return Padding(
               padding: const EdgeInsets.all(16),
               child: Form(

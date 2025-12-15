@@ -10,5 +10,7 @@ abstract class MealRepository {
 
   Future<List<UserMeal>> getMealsByDate(String date);
   Future<Map<String, dynamic>> getTodayMeals();
+  Future<void> updateMeal({required int mealId, required int weightGrams});
+  Future<void> deleteMeal(int mealId);
 }
 

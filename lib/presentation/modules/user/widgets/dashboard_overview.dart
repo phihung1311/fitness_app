@@ -95,8 +95,8 @@ class DashboardOverview extends StatelessWidget {
                         children: [
                           Expanded(
                             child: _MetricCard(
-                              label: 'BMI',
-                              value: metrics?.bmiDisplay ?? '--',
+                              label: 'TDEE',
+                              value: metrics?.tdeeDisplay ?? '--',
                               icon: Icons.calculate,
                             ),
                           ),

@@ -124,5 +124,41 @@ class MealApi {
       throw Exception('Lỗi lấy lịch sử bữa ăn: ${e.message}');
     }
   }
+
+  Future<void> updateMeal({
+    required int mealId,
+    required int weightGrams,
+  }) async {
+    try {
+      final token = _tokenStorage.readToken();
+      await _dio.put(
+        '${ApiEndpoints.baseUrl}/user/meals/$mealId',
+        data: {'weight_grams': weightGrams},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+    } on DioException catch (e) {
+      throw Exception('Lỗi cập nhật món ăn: ${e.message}');
+    }
+  }
+
+  Future<void> deleteMeal(int mealId) async {
+    try {
+      final token = _tokenStorage.readToken();
+      await _dio.delete(
+        '${ApiEndpoints.baseUrl}/user/meals/$mealId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+    } on DioException catch (e) {
+      throw Exception('Lỗi xóa món ăn: ${e.message}');
+    }
+  }
 }
 

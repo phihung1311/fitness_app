@@ -271,8 +271,10 @@ class _NutritionScreenState extends State<NutritionScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF0D0F0E),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF2A2C2B)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Food Image
           ClipRRect(
@@ -305,8 +307,125 @@ class _NutritionScreenState extends State<NutritionScreen> {
               ],
             ),
           ),
+          const SizedBox(width: 8),
+          Column(
+            children: [
+              IconButton(
+                tooltip: 'Chỉnh gram',
+                onPressed: () => _showEditMealDialog(context, meal),
+                icon: const Icon(Icons.edit, color: Color(0xFF52C41A)),
+              ),
+              IconButton(
+                tooltip: 'Xóa',
+                onPressed: () => _confirmDelete(context, meal),
+                icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  void _showEditMealDialog(BuildContext context, UserMeal meal) {
+    final ctrl = TextEditingController(text: (meal.weightGrams ?? 0).toString());
+    final mealBloc = context.read<MealBloc>();
+    showDialog(
+      context: context,
+      useRootNavigator: false, // giữ trong scope của MealBloc hiện tại
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1C1E1D),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: const Text(
+            'Chỉnh sửa gram',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          content: TextField(
+            controller: ctrl,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Gram',
+              hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
+              filled: true,
+              fillColor: const Color(0xFF0D0F0E),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Color(0xFF2A2C2B)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Color(0xFF52C41A)),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy', style: TextStyle(color: Colors.white70)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF52C41A),
+              ),
+              onPressed: () {
+                final grams = int.tryParse(ctrl.text.trim());
+                if (grams == null || grams <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Gram không hợp lệ'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+                mealBloc.add(UpdateMealEvent(mealId: meal.id, weightGrams: grams));
+                Navigator.pop(context);
+              },
+              child: const Text('Lưu', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmDelete(BuildContext context, UserMeal meal) {
+    final mealBloc = context.read<MealBloc>();
+    showDialog(
+      context: context,
+      useRootNavigator: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1C1E1D),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: const Text(
+            'Xóa món ăn',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          content: const Text(
+            'Bạn có chắc muốn xóa món này khỏi bữa ăn hôm nay?',
+            style: TextStyle(color: Colors.white70),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy', style: TextStyle(color: Colors.white70)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.shade700,
+              ),
+              onPressed: () {
+                mealBloc.add(DeleteMealEvent(meal.id));
+                Navigator.pop(context);
+              },
+              child: const Text('Xóa', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
     );
   }
 

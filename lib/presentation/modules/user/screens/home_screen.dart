@@ -14,6 +14,7 @@ import '../widgets/app_drawer.dart';
 import 'food/food_library_screen.dart';
 import 'nutrition/nutrition_screen.dart';
 import 'exercise/exercise_library_screen.dart';
+import 'profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,7 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const FoodLibraryScreen(),
         ),
         BlocProvider(
-          create: (context) => MealBloc(injector(), injector())..add(LoadTodayMeals()),
+          create: (context) => MealBloc(
+            injector(), // AddMeal
+            injector(), // GetTodayMeals
+            injector(), // UpdateMeal
+            injector(), // DeleteMeal
+          )..add(LoadTodayMeals()),
           child: const NutritionScreen(),
         ),
         MultiBlocProvider(
@@ -63,16 +69,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           child: const ExerciseLibraryScreen(),
         ),
-        const Center(child: Text('Cá nhân')),
+        const ProfileScreen(),
       ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _selectedIndex == 0 || _selectedIndex == 1 || _selectedIndex == 2 || _selectedIndex == 3
+      backgroundColor: _selectedIndex == 0 ||
+              _selectedIndex == 1 ||
+              _selectedIndex == 2 ||
+              _selectedIndex == 3 ||
+              _selectedIndex == 4
           ? const Color(0xFF0D0F0E)
           : Colors.white,
-      appBar: _selectedIndex == 0 || _selectedIndex == 1 || _selectedIndex == 2 || _selectedIndex == 3
+      appBar: _selectedIndex == 0 ||
+              _selectedIndex == 1 ||
+              _selectedIndex == 2 ||
+              _selectedIndex == 3 ||
+              _selectedIndex == 4
           ? null
           : AppBar(
               backgroundColor: Colors.white,
@@ -83,7 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-      drawer: _selectedIndex == 0 || _selectedIndex == 1 || _selectedIndex == 2 || _selectedIndex == 3
+      drawer: _selectedIndex == 0 ||
+              _selectedIndex == 1 ||
+              _selectedIndex == 2 ||
+              _selectedIndex == 3 ||
+              _selectedIndex == 4
           ? null 
           : const AppDrawer(),
       body: _screens[_selectedIndex],

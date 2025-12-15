@@ -17,7 +17,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
         height: dto.height,
         bmi: dto.bmi,
         tdee: dto.tdee,
+        bmr: dto.bmr,
         calorieGoal: dto.calorieGoal,
+        weightGoal: dto.weightGoal,
+        goalType: dto.goalType,
+        activityLevel: dto.activityLevel,
       );
     } catch (e) {
       throw Exception('Lỗi lấy thông tin metrics: $e');

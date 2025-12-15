@@ -664,7 +664,12 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
 
   Widget _buildMealSessionOption(String label, String session, IconData icon) {
     return BlocProvider(
-      create: (context) => MealBloc(injector(), injector()),
+      create: (context) => MealBloc(
+        injector(), // AddMeal
+        injector(), // GetTodayMeals
+        injector(), // UpdateMeal
+        injector(), // DeleteMeal
+      ),
       child: BlocConsumer<MealBloc, MealState>(
         listener: (context, state) {
           if (state.successMessage != null) {
