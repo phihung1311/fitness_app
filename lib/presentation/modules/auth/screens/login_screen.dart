@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injector.dart';
+import '../../../../services/storage/role_storage.dart';
+import '../../../../data/datasources/remote/profile_api.dart';
 import '../../user/screens/home_screen.dart';
 import '../../user/screens/profile/onboarding_profile_screen.dart';
+import '../../admin/screens/admin_home_screen.dart';
 import '../../../../domain/usecases/profile/get_profile_metrics.dart';
 import '../bloc/form_status.dart';
 import '../bloc/login/login_bloc.dart';
@@ -37,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     context.read<LoginBloc>().add(
           LoginSubmitted(
-            email: 'hung@test.com',
+            email: 'haha@gmail.com',
             password: '123456',
           ),
         );
@@ -55,6 +58,25 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _navigateAfterLogin(BuildContext context) async {
     setState(() => _checkingOnboarding = true);
     try {
+      // Lấy role_id và lưu vào storage
+      final profileApi = injector<ProfileApi>();
+      final profileData = await profileApi.getProfile();
+      final roleId = profileData['role_id'] as int?;
+      if (roleId != null) {
+        await injector<RoleStorage>().saveRoleId(roleId);
+      }
+
+      final roleStorage = injector<RoleStorage>();
+      final isAdmin = roleStorage.isAdmin();
+
+      // Admin không cần onboarding, đi thẳng vào AdminHomeScreen
+      if (isAdmin) {
+        if (!mounted) return;
+        Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
+        return;
+      }
+
+      // User cần kiểm tra onboarding
       final metrics = await injector<GetProfileMetrics>()();
       final needsOnboarding = _needsOnboarding(metrics);
 

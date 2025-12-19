@@ -66,6 +66,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   AppException _mapDioError(DioException e) {
+    // Xử lý lỗi connection
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return AppException(
+        'Kết nối timeout. Vui lòng kiểm tra kết nối mạng và thử lại.',
+        code: 'TIMEOUT',
+      );
+    }
+
+    if (e.type == DioExceptionType.connectionError ||
+        e.type == DioExceptionType.unknown) {
+      return AppException(
+        'Không thể kết nối đến server. Vui lòng kiểm tra:\n'
+        '1. Backend đã chạy chưa?\n'
+        '2. URL đúng chưa? (http://10.0.2.2:3000/api)\n'
+        '3. Kết nối mạng ổn định không?',
+        code: 'CONNECTION_ERROR',
+      );
+    }
+
+    // Xử lý lỗi từ server
     final response = e.response?.data;
     if (response is Map<String, dynamic>) {
       final message = response['message']?.toString();
@@ -73,6 +95,8 @@ class AuthRepositoryImpl implements AuthRepository {
         return AppException(message, code: e.response?.statusCode?.toString());
       }
     }
+
+    // Lỗi khác
     return AppException(
       e.message ?? 'Yêu cầu thất bại, vui lòng thử lại.',
       code: e.response?.statusCode?.toString(),

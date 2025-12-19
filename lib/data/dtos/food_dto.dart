@@ -22,21 +22,27 @@ class FoodDto {
   });
 
   factory FoodDto.fromJson(Map<String, dynamic> json) {
+    // Helper function để parse số an toàn (hỗ trợ cả String và num)
+    double? _parseDouble(dynamic value) {
+      if (value == null) return null;
+      if (value is num) return value.toDouble();
+      if (value is String) {
+        // Hỗ trợ cả dấu phẩy và chấm
+        final normalized = value.replaceAll(',', '.');
+        return double.tryParse(normalized);
+      }
+      return null;
+    }
+
     return FoodDto(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      calories100g: (json['calories_100g'] as num).toDouble(),
-      protein100g: json['protein'] != null 
-          ? (json['protein'] as num).toDouble() 
-          : null,
-      carbs100g: json['carbs'] != null 
-          ? (json['carbs'] as num).toDouble() 
-          : null,
-      fat100g: json['fat'] != null 
-          ? (json['fat'] as num).toDouble() 
-          : null,
-      mealType: json['meal_type'] as String?,
-      imageUrl: json['image_url'] as String?,
+      id: json['id'] is int ? json['id'] as int : int.tryParse(json['id'].toString()) ?? 0,
+      name: json['name']?.toString() ?? '',
+      calories100g: _parseDouble(json['calories_100g']) ?? 0.0,
+      protein100g: _parseDouble(json['protein']),
+      carbs100g: _parseDouble(json['carbs']),
+      fat100g: _parseDouble(json['fat']),
+      mealType: json['meal_type']?.toString() ?? json['category']?.toString(),
+      imageUrl: json['image_url']?.toString(),
     );
   }
 

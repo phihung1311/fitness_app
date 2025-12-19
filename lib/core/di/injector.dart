@@ -6,16 +6,19 @@ import '../../data/datasources/remote/auth_api.dart';
 import '../../data/datasources/remote/profile_api.dart';
 import '../../data/datasources/remote/meal_api.dart';
 import '../../data/datasources/remote/exercise_api.dart';
+import '../../data/datasources/remote/admin/admin_food_api.dart';
 import '../../data/repositories_impl/auth_repository_impl.dart';
 import '../../data/repositories_impl/profile_repository_impl.dart';
 import '../../data/repositories_impl/food_repository_impl.dart';
 import '../../data/repositories_impl/meal_repository_impl.dart';
 import '../../data/repositories_impl/exercise_repository_impl.dart';
+import '../../data/repositories_impl/admin/admin_food_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/profile_repository.dart';
 import '../../domain/repositories/food_repository.dart';
 import '../../domain/repositories/meal_repository.dart';
 import '../../domain/repositories/exercise_repository.dart';
+import '../../domain/repositories/admin/admin_food_repository.dart';
 import '../../domain/usecases/auth/login.dart';
 import '../../domain/usecases/auth/register.dart';
 import '../../domain/usecases/profile/get_profile_metrics.dart';
@@ -26,7 +29,12 @@ import '../../domain/usecases/meal/update_meal.dart';
 import '../../domain/usecases/meal/delete_meal.dart';
 import '../../domain/usecases/exercise/get_exercises.dart';
 import '../../domain/usecases/exercise/get_exercise_detail.dart';
+import '../../domain/usecases/admin/get_foods.dart' as admin_get_foods;
+import '../../domain/usecases/admin/add_food.dart' as admin_add_food;
+import '../../domain/usecases/admin/update_food.dart' as admin_update_food;
+import '../../domain/usecases/admin/delete_food.dart' as admin_delete_food;
 import '../../services/storage/token_storage.dart';
+import '../../services/storage/role_storage.dart';
 import '../constants/api_endpoints.dart';
 
 final GetIt injector = GetIt.instance;
@@ -37,6 +45,7 @@ Future<void> setupDependencies() async {
   injector
     ..registerSingleton<SharedPreferences>(prefs)
     ..registerLazySingleton<TokenStorage>(() => TokenStorage(prefs))
+    ..registerLazySingleton<RoleStorage>(() => RoleStorage(prefs))
     ..registerLazySingleton<Dio>(() {
       final dio = Dio(
         BaseOptions(
@@ -52,6 +61,8 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<ProfileApi>(() => ProfileApi(injector(), injector()))
     ..registerLazySingleton<MealApi>(() => MealApi(injector(), injector()))
     ..registerLazySingleton<ExerciseApi>(() => ExerciseApi(injector(), injector()))
+    // Admin APIs (tách biệt)
+    ..registerLazySingleton<AdminFoodApi>(() => AdminFoodApi(injector(), injector()))
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(
         api: injector(),
@@ -70,6 +81,10 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<ExerciseRepository>(
       () => ExerciseRepositoryImpl(injector()),
     )
+    // Admin Repositories (tách biệt)
+    ..registerLazySingleton<AdminFoodRepository>(
+      () => AdminFoodRepositoryImpl(injector()),
+    )
     ..registerLazySingleton<LoginUseCase>(() => LoginUseCase(injector()))
     ..registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(injector()))
     ..registerLazySingleton<GetProfileMetrics>(() => GetProfileMetrics(injector()))
@@ -79,6 +94,11 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<UpdateMeal>(() => UpdateMeal(injector()))
     ..registerLazySingleton<DeleteMeal>(() => DeleteMeal(injector()))
     ..registerLazySingleton<GetExercises>(() => GetExercises(injector()))
-    ..registerLazySingleton<GetExerciseDetail>(() => GetExerciseDetail(injector()));
+    ..registerLazySingleton<GetExerciseDetail>(() => GetExerciseDetail(injector()))
+    // Admin UseCases (tách biệt)
+    ..registerLazySingleton<admin_get_foods.GetFoods>(() => admin_get_foods.GetFoods(injector()))
+    ..registerLazySingleton<admin_add_food.AddFood>(() => admin_add_food.AddFood(injector()))
+    ..registerLazySingleton<admin_update_food.UpdateFood>(() => admin_update_food.UpdateFood(injector()))
+    ..registerLazySingleton<admin_delete_food.DeleteFood>(() => admin_delete_food.DeleteFood(injector()));
 }
 
