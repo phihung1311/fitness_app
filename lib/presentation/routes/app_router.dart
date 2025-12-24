@@ -6,10 +6,15 @@ import '../modules/auth/screens/register_screen.dart';
 import '../modules/user/screens/home_screen.dart';
 import '../modules/user/screens/profile/onboarding_profile_screen.dart';
 import '../modules/admin/screens/admin_home_screen.dart';
-import '../modules/admin/screens/admin_add_food_screen.dart';
-import '../modules/admin/screens/admin_edit_food_screen.dart';
+import '../modules/admin/screens/food/admin_add_food_screen.dart';
+import '../modules/admin/screens/food/admin_edit_food_screen.dart';
+import '../modules/admin/screens/exercise/admin_exercise_management_screen.dart';
+import '../modules/admin/screens/exercise/admin_add_exercise_screen.dart';
+import '../modules/admin/screens/exercise/admin_edit_exercise_screen.dart';
 import '../modules/admin/bloc/admin_food/admin_food_bloc.dart';
+import '../modules/admin/bloc/exercise/admin_exercise_bloc.dart';
 import '../../../domain/entities/food.dart';
+import '../../../domain/entities/exercise.dart';
 import '../../core/di/injector.dart';
 import '../guards/admin_route_guard.dart';
 
@@ -70,6 +75,48 @@ class AppRouter {
               injector(),
             ),
             child: AdminEditFoodScreen(food: food),
+          ),
+        );
+      case AdminExerciseManagementScreen.routeName:
+        return MaterialPageRoute(
+          builder: (_) => const AdminExerciseManagementScreen(),
+        );
+      case AdminAddExerciseScreen.routeName:
+        final bloc = settings.arguments as AdminExerciseBloc?;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: bloc ?? AdminExerciseBloc(
+              injector(),
+              injector(),
+              injector(),
+              injector(),
+            ),
+            child: const AdminAddExerciseScreen(),
+          ),
+        );
+      case AdminEditExerciseScreen.routeName:
+        final args = settings.arguments as Map<String, dynamic>?;
+        final exercise = args?['exercise'] as Exercise?;
+        final bloc = args?['bloc'] as AdminExerciseBloc?;
+        
+        if (exercise == null) {
+          return MaterialPageRoute(
+            builder: (_) => Scaffold(
+              appBar: AppBar(title: const Text('Lỗi')),
+              body: const Center(child: Text('Không tìm thấy thông tin bài tập')),
+            ),
+          );
+        }
+        
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: bloc ?? AdminExerciseBloc(
+              injector(),
+              injector(),
+              injector(),
+              injector(),
+            ),
+            child: AdminEditExerciseScreen(exercise: exercise),
           ),
         );
       default:

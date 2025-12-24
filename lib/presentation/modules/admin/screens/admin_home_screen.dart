@@ -3,9 +3,9 @@ import '../../../../core/di/injector.dart';
 import '../../../../services/storage/role_storage.dart';
 import '../../../../services/storage/token_storage.dart';
 import '../../auth/screens/login_screen.dart';
-import 'admin_food_management_screen.dart';
+import 'food/admin_food_management_screen.dart';
+import 'exercise/admin_exercise_management_screen.dart';
 
-/// Admin Home Screen - Tách biệt hoàn toàn với User HomeScreen
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
 
@@ -46,8 +46,8 @@ class AdminHomeScreen extends StatelessWidget {
             _buildMenuCard(
               context,
               icon: Icons.restaurant,
-              title: 'Quản lý món ăn',
-              description: 'Thêm, sửa, xóa món ăn',
+              title: 'Quản lý thực phẩm',
+              description: 'Thêm, sửa, xóa thực phẩm',
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -63,8 +63,10 @@ class AdminHomeScreen extends StatelessWidget {
               title: 'Quản lý bài tập',
               description: 'Thêm, sửa, xóa bài tập',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Chức năng đang phát triển')),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const AdminExerciseManagementScreen(),
+                  ),
                 );
               },
             ),

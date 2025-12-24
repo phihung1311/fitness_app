@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../bloc/admin_food/admin_food_bloc.dart';
-import '../bloc/admin_food/admin_food_event.dart';
-import '../bloc/admin_food/admin_food_state.dart';
+import '../../bloc/admin_food/admin_food_bloc.dart';
+import '../../bloc/admin_food/admin_food_event.dart';
+import '../../bloc/admin_food/admin_food_state.dart';
 
-/// Màn hình thêm món ăn mới cho Admin
 class AdminAddFoodScreen extends StatefulWidget {
   const AdminAddFoodScreen({super.key});
 
@@ -209,30 +208,6 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
             'Thêm món ăn mới',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          actions: [
-            BlocBuilder<AdminFoodBloc, AdminFoodState>(
-              builder: (context, state) => TextButton(
-                onPressed: (state.isSubmitting || _isSubmitting) ? null : _submit,
-                child: state.isSubmitting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Text(
-                        'Lưu',
-                        style: TextStyle(
-                          color: Color(0xFF52C41A),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-              ),
-            ),
-          ],
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -486,6 +461,41 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
                     }
                   },
                 ),
+                const SizedBox(height: 24),
+                // Nút Lưu
+                BlocBuilder<AdminFoodBloc, AdminFoodState>(
+                  builder: (context, state) => SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: (state.isSubmitting || _isSubmitting) ? null : _submit,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF52C41A),
+                        disabledBackgroundColor: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: state.isSubmitting || _isSubmitting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              'Thêm thực phẩm',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

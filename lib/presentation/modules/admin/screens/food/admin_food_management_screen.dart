@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../../../core/di/injector.dart';
+import '../../../../../core/di/injector.dart';
 import '../../../../../domain/entities/food.dart';
-import '../bloc/admin_food/admin_food_bloc.dart';
-import '../bloc/admin_food/admin_food_event.dart';
-import '../bloc/admin_food/admin_food_state.dart';
+import '../../bloc/admin_food/admin_food_bloc.dart';
+import '../../bloc/admin_food/admin_food_event.dart';
+import '../../bloc/admin_food/admin_food_state.dart';
 import 'admin_add_food_screen.dart';
 
-/// Màn hình quản lý món ăn cho Admin
-/// Tách biệt hoàn toàn với FoodLibraryScreen của User
 class AdminFoodManagementScreen extends StatefulWidget {
   const AdminFoodManagementScreen({super.key});
 

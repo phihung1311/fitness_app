@@ -134,9 +134,9 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
                           const SizedBox(height: 32),
 
                           // Nutrition Cards
-                          _buildNutritionCards(calories, protein, carbs, fat),
-
-                          const SizedBox(height: 32),
+                          // _buildNutritionCards(calories, protein, carbs, fat),
+                          //
+                          // const SizedBox(height: 32),
 
                           // Detailed Nutrition
                           _buildDetailedNutrition(calories, protein, carbs, fat),
@@ -355,137 +355,137 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildNutritionCards(double calories, double protein, double carbs, double fat) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Thông tin dinh dưỡng',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _buildNutritionCard(
-                  'Calories',
-                  calories.toInt().toString(),
-                  'kcal',
-                  Icons.local_fire_department,
-                  const Color(0xFFFF6B6B),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildNutritionCard(
-                  'Protein',
-                  protein.toStringAsFixed(1),
-                  'g',
-                  Icons.fitness_center,
-                  const Color(0xFF4ECDC4),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildNutritionCard(
-                  'Carbs',
-                  carbs.toStringAsFixed(1),
-                  'g',
-                  Icons.grain,
-                  const Color(0xFFFFD93D),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildNutritionCard(
-                  'Fat',
-                  fat.toStringAsFixed(1),
-                  'g',
-                  Icons.water_drop,
-                  const Color(0xFFFF8A5B),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNutritionCard(String label, String value, String unit, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1C1E1D),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: color, size: 20),
-              ),
-              const Spacer(),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-              fontSize: 12,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Text(
-                  unit,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildNutritionCards(double calories, double protein, double carbs, double fat) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 24),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         const Text(
+  //           'Thông tin dinh dưỡng',
+  //           style: TextStyle(
+  //             color: Colors.white,
+  //             fontSize: 20,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 16),
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: _buildNutritionCard(
+  //                 'Calories',
+  //                 calories.toInt().toString(),
+  //                 'kcal',
+  //                 Icons.local_fire_department,
+  //                 const Color(0xFFFF6B6B),
+  //               ),
+  //             ),
+  //             const SizedBox(width: 12),
+  //             Expanded(
+  //               child: _buildNutritionCard(
+  //                 'Protein',
+  //                 protein.toStringAsFixed(1),
+  //                 'g',
+  //                 Icons.fitness_center,
+  //                 const Color(0xFF4ECDC4),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 12),
+  //         Row(
+  //           children: [
+  //             Expanded(
+  //               child: _buildNutritionCard(
+  //                 'Carbs',
+  //                 carbs.toStringAsFixed(1),
+  //                 'g',
+  //                 Icons.grain,
+  //                 const Color(0xFFFFD93D),
+  //               ),
+  //             ),
+  //             const SizedBox(width: 12),
+  //             Expanded(
+  //               child: _buildNutritionCard(
+  //                 'Fat',
+  //                 fat.toStringAsFixed(1),
+  //                 'g',
+  //                 Icons.water_drop,
+  //                 const Color(0xFFFF8A5B),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _buildNutritionCard(String label, String value, String unit, IconData icon, Color color) {
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       color: const Color(0xFF1C1E1D),
+  //       borderRadius: BorderRadius.circular(16),
+  //       border: Border.all(
+  //         color: color.withOpacity(0.3),
+  //         width: 1,
+  //       ),
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Container(
+  //               padding: const EdgeInsets.all(8),
+  //               decoration: BoxDecoration(
+  //                 color: color.withOpacity(0.15),
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //               child: Icon(icon, color: color, size: 20),
+  //             ),
+  //             const Spacer(),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 12),
+  //         Text(
+  //           label,
+  //           style: TextStyle(
+  //             color: Colors.white.withOpacity(0.6),
+  //             fontSize: 12,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 4),
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.end,
+  //           children: [
+  //             Text(
+  //               value,
+  //               style: const TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 24,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(width: 4),
+  //             Padding(
+  //               padding: const EdgeInsets.only(bottom: 4),
+  //               child: Text(
+  //                 unit,
+  //                 style: TextStyle(
+  //                   color: Colors.white.withOpacity(0.6),
+  //                   fontSize: 14,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildDetailedNutrition(double calories, double protein, double carbs, double fat) {
     return Container(

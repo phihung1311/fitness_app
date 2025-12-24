@@ -3,8 +3,7 @@ import '../../core/di/injector.dart';
 import '../../services/storage/role_storage.dart';
 import '../modules/user/screens/home_screen.dart';
 
-/// Guard để kiểm tra quyền admin trước khi vào màn admin
-/// Nếu không phải admin → redirect về HomeScreen của User
+
 class AdminRouteGuard extends StatelessWidget {
   final Widget child;
 

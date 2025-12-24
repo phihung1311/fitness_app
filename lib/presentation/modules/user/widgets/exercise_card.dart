@@ -83,7 +83,7 @@ class ExerciseCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 180,
-        height: 220, // Fixed height để tránh overflow
+        height: 220,
         decoration: BoxDecoration(
           color: const Color(0xFF1C1E1D),
           borderRadius: BorderRadius.circular(20),

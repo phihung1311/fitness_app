@@ -65,7 +65,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF0D0F0E), // Pure black background
+        color: Color(0xFF0D0F0E),
       ),
       child: SafeArea(
         child: Column(

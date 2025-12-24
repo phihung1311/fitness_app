@@ -27,17 +27,29 @@ class ExerciseDto {
 
   factory ExerciseDto.fromJson(Map<String, dynamic> json) {
     return ExerciseDto(
-      id: json['id'] as int,
-      name: json['name'] as String,
+      id: _parseInt(json['id']) ?? 0,
+      name: json['name'] as String? ?? '',
       muscle_group: json['muscle_group'] as String?,
       difficulty: json['difficulty'] as String?,
-      sets: json['sets'] as int?,
-      reps: json['reps'] as int?,
-      rest_time_sec: json['rest_time_sec'] as int?,
-      calories_burned: json['calories_burned'] as int?,
+      sets: _parseInt(json['sets']),
+      reps: _parseInt(json['reps']),
+      rest_time_sec: _parseInt(json['rest_time_sec']),
+      calories_burned: _parseInt(json['calories_burned']),
       instructions: json['instructions'] as String?,
       image_url: json['image_url'] as String?,
     );
+  }
+
+  static int? _parseInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) {
+      final normalized = value.replaceAll(',', '.').trim();
+      final doubleValue = double.tryParse(normalized);
+      return doubleValue?.round();
+    }
+    return null;
   }
 
   Exercise toEntity() {

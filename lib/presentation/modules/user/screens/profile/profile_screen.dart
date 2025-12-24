@@ -49,13 +49,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _onLogout() async {
-    await injector<TokenStorage>().clear();
-    if (mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        LoginScreen.routeName,
-        (route) => false,
-      );
+    final bool? shouldLogout = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: const Text('Xác nhận đăng xuất'),
+            content: const Text('Bạn có chắc muốn đăng xuất khỏi tài khoản?'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: ()=> Navigator.of(context).pop(false),
+                  child: const Text('Hủy'),
+              ),
+              TextButton(
+                  onPressed: ()=> Navigator.of(context).pop(true),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                  ),
+                  child: const Text('Đăng xuất'),
+              ),
+            ],
+          );
+        },
+    );
+    if (shouldLogout == true){
+      await injector<TokenStorage>().clear();
+      if(mounted){
+        Navigator.pushNamedAndRemoveUntil(
+            context,
+            LoginScreen.routeName,
+            (route)=>false);
+      }
     }
   }
 
