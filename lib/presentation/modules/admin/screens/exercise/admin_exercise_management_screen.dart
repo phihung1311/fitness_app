@@ -12,7 +12,7 @@ import 'admin_edit_exercise_screen.dart';
 class AdminExerciseManagementScreen extends StatefulWidget {
   const AdminExerciseManagementScreen({super.key});
 
-  static const String routeName = '/admin/exercises';
+  static const String routeName = '/admin/exercises-management';
 
   @override
   State<AdminExerciseManagementScreen> createState() => _AdminExerciseManagementScreenState();
@@ -67,14 +67,6 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
             'Quản lý Bài tập',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              onPressed: () {
-                // Có thể thêm menu options ở đây
-              },
-            ),
-          ],
         ),
         body: BlocConsumer<AdminExerciseBloc, AdminExerciseState>(
           listener: (context, state) {

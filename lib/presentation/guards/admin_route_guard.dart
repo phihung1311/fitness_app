@@ -25,7 +25,6 @@ class AdminRouteGuard extends StatelessWidget {
       });
       return const SizedBox.shrink();
     }
-    
     return child;
   }
 }

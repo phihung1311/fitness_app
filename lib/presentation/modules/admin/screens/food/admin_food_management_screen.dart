@@ -11,6 +11,7 @@ import 'admin_add_food_screen.dart';
 
 class AdminFoodManagementScreen extends StatefulWidget {
   const AdminFoodManagementScreen({super.key});
+  static const String routeName = '/admin/food-management';
 
   @override
   State<AdminFoodManagementScreen> createState() => _AdminFoodManagementScreenState();
@@ -52,17 +53,9 @@ class _AdminFoodManagementScreenState extends State<AdminFoodManagementScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: const Text(
-            'Quản lý Món ăn',
+            'Quản lý Thực phẩm',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              onPressed: () {
-                // Có thể thêm menu options ở đây
-              },
-            ),
-          ],
         ),
         body: BlocConsumer<AdminFoodBloc, AdminFoodState>(
           listener: (context, state) {

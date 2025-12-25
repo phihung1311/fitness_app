@@ -1,4 +1,4 @@
-import '../../repositories/admin/admin_food_repository.dart';
+import '../../../repositories/admin/admin_food_repository.dart';
 
 /// UseCase: Xóa món ăn (chỉ admin)
 class DeleteFood {

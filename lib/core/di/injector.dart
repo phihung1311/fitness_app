@@ -8,6 +8,8 @@ import '../../data/datasources/remote/meal_api.dart';
 import '../../data/datasources/remote/exercise_api.dart';
 import '../../data/datasources/remote/admin/admin_food_api.dart';
 import '../../data/datasources/remote/admin/admin_exercise_api.dart';
+import '../../data/datasources/remote/admin/admin_user_api.dart';
+import '../../data/datasources/remote/statistics_api.dart';
 import '../../data/repositories_impl/auth_repository_impl.dart';
 import '../../data/repositories_impl/profile_repository_impl.dart';
 import '../../data/repositories_impl/food_repository_impl.dart';
@@ -15,6 +17,8 @@ import '../../data/repositories_impl/meal_repository_impl.dart';
 import '../../data/repositories_impl/exercise_repository_impl.dart';
 import '../../data/repositories_impl/admin/admin_food_repository_impl.dart';
 import '../../data/repositories_impl/admin/admin_exercise_repository_impl.dart';
+import '../../data/repositories_impl/admin/admin_user_repository_impl.dart';
+import '../../data/repositories_impl/statistics_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/profile_repository.dart';
 import '../../domain/repositories/food_repository.dart';
@@ -22,6 +26,8 @@ import '../../domain/repositories/meal_repository.dart';
 import '../../domain/repositories/exercise_repository.dart';
 import '../../domain/repositories/admin/admin_food_repository.dart';
 import '../../domain/repositories/admin/exercise/admin_exercise_repository.dart';
+import '../../domain/repositories/admin/admin_user_repository.dart';
+import '../../domain/repositories/statistics_repository.dart';
 import '../../domain/usecases/auth/login.dart';
 import '../../domain/usecases/auth/register.dart';
 import '../../domain/usecases/profile/get_profile_metrics.dart';
@@ -32,14 +38,22 @@ import '../../domain/usecases/meal/update_meal.dart';
 import '../../domain/usecases/meal/delete_meal.dart';
 import '../../domain/usecases/exercise/get_exercises.dart';
 import '../../domain/usecases/exercise/get_exercise_detail.dart';
-import '../../domain/usecases/admin/get_foods.dart' as admin_get_foods;
-import '../../domain/usecases/admin/add_food.dart' as admin_add_food;
-import '../../domain/usecases/admin/update_food.dart' as admin_update_food;
-import '../../domain/usecases/admin/delete_food.dart' as admin_delete_food;
+import '../../domain/usecases/admin/food/get_foods.dart' as admin_get_foods;
+import '../../domain/usecases/admin/food/add_food.dart' as admin_add_food;
+import '../../domain/usecases/admin/food/update_food.dart' as admin_update_food;
+import '../../domain/usecases/admin/food/delete_food.dart' as admin_delete_food;
 import '../../domain/usecases/admin/exercise/get_exercises.dart' as admin_get_exercises;
 import '../../domain/usecases/admin/exercise/add_exercise.dart' as admin_add_exercise;
 import '../../domain/usecases/admin/exercise/update_exercise.dart' as admin_update_exercise;
 import '../../domain/usecases/admin/exercise/delete_exercise.dart' as admin_delete_exercise;
+import '../../domain/usecases/admin/user/get_users.dart' as admin_get_users;
+import '../../domain/usecases/admin/user/get_user_detail.dart' as admin_get_user_detail;
+import '../../domain/usecases/admin/user/update_user_role.dart' as admin_update_user_role;
+import '../../domain/usecases/admin/user/lock_user.dart' as admin_lock_user;
+import '../../domain/usecases/admin/user/unlock_user.dart' as admin_unlock_user;
+import '../../domain/usecases/admin/user/delete_user.dart' as admin_delete_user;
+import '../../domain/usecases/statistics/get_calories_stats.dart';
+import '../../domain/usecases/statistics/get_weight_prediction.dart';
 import '../../services/storage/token_storage.dart';
 import '../../services/storage/role_storage.dart';
 import '../constants/api_endpoints.dart';
@@ -71,6 +85,8 @@ Future<void> setupDependencies() async {
     // Admin APIs (tách biệt)
     ..registerLazySingleton<AdminFoodApi>(() => AdminFoodApi(injector(), injector()))
     ..registerLazySingleton<AdminExerciseApi>(() => AdminExerciseApi(injector(), injector()))
+    ..registerLazySingleton<AdminUserApi>(() => AdminUserApi(injector(), injector()))
+    ..registerLazySingleton<StatisticsApi>(() => StatisticsApi(injector(), injector()))
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(
         api: injector(),
@@ -96,6 +112,12 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<AdminExerciseRepository>(
       () => AdminExerciseRepositoryImpl(injector()),
     )
+    ..registerLazySingleton<AdminUserRepository>(
+      () => AdminUserRepositoryImpl(injector()),
+    )
+    ..registerLazySingleton<StatisticsRepository>(
+      () => StatisticsRepositoryImpl(injector()),
+    )
     ..registerLazySingleton<LoginUseCase>(() => LoginUseCase(injector()))
     ..registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(injector()))
     ..registerLazySingleton<GetProfileMetrics>(() => GetProfileMetrics(injector()))
@@ -114,6 +136,16 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<admin_get_exercises.GetExercises>(() => admin_get_exercises.GetExercises(injector()))
     ..registerLazySingleton<admin_add_exercise.AddExercise>(() => admin_add_exercise.AddExercise(injector()))
     ..registerLazySingleton<admin_update_exercise.UpdateExercise>(() => admin_update_exercise.UpdateExercise(injector()))
-    ..registerLazySingleton<admin_delete_exercise.DeleteExercise>(() => admin_delete_exercise.DeleteExercise(injector()));
+    ..registerLazySingleton<admin_delete_exercise.DeleteExercise>(() => admin_delete_exercise.DeleteExercise(injector()))
+    // Admin User UseCases
+    ..registerLazySingleton<admin_get_users.GetUsers>(() => admin_get_users.GetUsers(injector()))
+    ..registerLazySingleton<admin_get_user_detail.GetUserDetail>(() => admin_get_user_detail.GetUserDetail(injector()))
+    ..registerLazySingleton<admin_update_user_role.UpdateUserRole>(() => admin_update_user_role.UpdateUserRole(injector()))
+    ..registerLazySingleton<admin_lock_user.LockUser>(() => admin_lock_user.LockUser(injector()))
+    ..registerLazySingleton<admin_unlock_user.UnlockUser>(() => admin_unlock_user.UnlockUser(injector()))
+    ..registerLazySingleton<admin_delete_user.DeleteUser>(() => admin_delete_user.DeleteUser(injector()))
+    // Statistics UseCases
+    ..registerLazySingleton<GetCaloriesStats>(() => GetCaloriesStats(injector()))
+    ..registerLazySingleton<GetWeightPrediction>(() => GetWeightPrediction(injector()));
 }
 

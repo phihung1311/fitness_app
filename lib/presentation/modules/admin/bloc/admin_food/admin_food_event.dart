@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Events cho AdminFoodBloc
-/// Tách biệt hoàn toàn với MealEvent của User
 abstract class AdminFoodEvent extends Equatable {
   const AdminFoodEvent();
 
@@ -9,12 +7,10 @@ abstract class AdminFoodEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Load danh sách món ăn
 class LoadFoods extends AdminFoodEvent {
   const LoadFoods();
 }
 
-/// Thêm món ăn mới
 class AddFoodEvent extends AdminFoodEvent {
   final String name;
   final int calories100g;
@@ -46,7 +42,6 @@ class AddFoodEvent extends AdminFoodEvent {
       ];
 }
 
-/// Cập nhật món ăn
 class UpdateFoodEvent extends AdminFoodEvent {
   final int foodId;
   final String? name;
@@ -81,7 +76,6 @@ class UpdateFoodEvent extends AdminFoodEvent {
       ];
 }
 
-/// Xóa món ăn
 class DeleteFoodEvent extends AdminFoodEvent {
   final int foodId;
 
@@ -91,7 +85,6 @@ class DeleteFoodEvent extends AdminFoodEvent {
   List<Object?> get props => [foodId];
 }
 
-/// Tìm kiếm món ăn
 class SearchFoodsEvent extends AdminFoodEvent {
   final String query;
 
@@ -101,7 +94,6 @@ class SearchFoodsEvent extends AdminFoodEvent {
   List<Object?> get props => [query];
 }
 
-/// Lọc món ăn theo loại bữa ăn
 class FilterFoodsByMealTypeEvent extends AdminFoodEvent {
   final String? mealType;
 

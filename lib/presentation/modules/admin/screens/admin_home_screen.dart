@@ -5,6 +5,7 @@ import '../../../../services/storage/token_storage.dart';
 import '../../auth/screens/login_screen.dart';
 import 'food/admin_food_management_screen.dart';
 import 'exercise/admin_exercise_management_screen.dart';
+import 'user/admin_user_management_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -18,7 +19,7 @@ class AdminHomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1C1E1D),
         title: const Text(
-          'Quản trị viên',
+          'Trang quản lý',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
@@ -49,11 +50,7 @@ class AdminHomeScreen extends StatelessWidget {
               title: 'Quản lý thực phẩm',
               description: 'Thêm, sửa, xóa thực phẩm',
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const AdminFoodManagementScreen(),
-                  ),
-                );
+                Navigator.of(context).pushNamed(AdminFoodManagementScreen.routeName);
               },
             ),
             const SizedBox(height: 16),
@@ -63,34 +60,28 @@ class AdminHomeScreen extends StatelessWidget {
               title: 'Quản lý bài tập',
               description: 'Thêm, sửa, xóa bài tập',
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const AdminExerciseManagementScreen(),
-                  ),
-                );
+                Navigator.of(context).pushNamed(AdminExerciseManagementScreen.routeName);
               },
             ),
             const SizedBox(height: 16),
             _buildMenuCard(
               context,
               icon: Icons.people,
-              title: 'Quản lý người dùng',
-              description: 'Xem danh sách người dùng',
+              title: 'Quản lý tài khoản',
+              description: 'Xem, phân quyền, khóa tài khoản',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Chức năng đang phát triển')),
-                );
+                Navigator.of(context).pushNamed(AdminUserManagementScreen.routeName);
               },
             ),
             const SizedBox(height: 16),
             _buildMenuCard(
               context,
               icon: Icons.bar_chart,
-              title: 'Thống kê',
-              description: 'Xem thống kê hệ thống',
+              title: 'Quản lý kế hoạch',
+              description: 'Thêm, sửa, xóa kế hoạch',
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Chức năng đang phát triển')),
+                  const SnackBar(content: Text('chưa')),
                 );
               },
             ),

@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../domain/entities/food.dart';
-import '../../../../../domain/usecases/admin/get_foods.dart';
-import '../../../../../domain/usecases/admin/add_food.dart';
-import '../../../../../domain/usecases/admin/update_food.dart';
-import '../../../../../domain/usecases/admin/delete_food.dart';
+import '../../../../../domain/usecases/admin/food/get_foods.dart';
+import '../../../../../domain/usecases/admin/food/add_food.dart';
+import '../../../../../domain/usecases/admin/food/update_food.dart';
+import '../../../../../domain/usecases/admin/food/delete_food.dart';
 import 'admin_food_event.dart';
 import 'admin_food_state.dart';
 

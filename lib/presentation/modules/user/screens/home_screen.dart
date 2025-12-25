@@ -10,7 +10,6 @@ import '../bloc/exercise/exercise_event.dart';
 import '../bloc/profile_metrics/profile_metrics_bloc.dart';
 import '../bloc/profile_metrics/profile_metrics_event.dart';
 import '../widgets/dashboard_overview.dart';
-import '../widgets/app_drawer.dart';
 import 'food/food_library_screen.dart';
 import 'nutrition/nutrition_screen.dart';
 import 'exercise/exercise_library_screen.dart';
@@ -97,13 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-      drawer: _selectedIndex == 0 ||
-              _selectedIndex == 1 ||
-              _selectedIndex == 2 ||
-              _selectedIndex == 3 ||
-              _selectedIndex == 4
-          ? null 
-          : const AppDrawer(),
       body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

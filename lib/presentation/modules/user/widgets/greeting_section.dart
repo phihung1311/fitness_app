@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../routes/app_router.dart';
+import '../screens/statistics/statistics_screen.dart';
 
 class GreetingSection extends StatelessWidget {
   final String? userName;
-  
+
   const GreetingSection({super.key, this.userName});
 
   String _getGreeting() {
@@ -13,12 +15,21 @@ class GreetingSection extends StatelessWidget {
   }
 
   String _getDisplayName() {
-    if (userName != null && userName!.isNotEmpty) {
-      return userName!.split(' ').last;
+    if (userName != null && userName!.trim().isNotEmpty) {
+      // Lấy từ cuối cùng (thường là tên chính)
+      return userName!.trim().split(' ').last;
     }
     return 'Bạn';
   }
 
+  String _getInitialLetter() {
+    final displayName = _getDisplayName();
+    if (displayName.isNotEmpty) {
+      // Lấy chữ cái đầu, chuyển thành in hoa
+      return displayName[0].toUpperCase();
+    }
+    return 'B'; // fallback
+  }
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -26,8 +37,13 @@ class GreetingSection extends StatelessWidget {
         CircleAvatar(
           radius: 28,
           backgroundColor: Colors.green.shade100,
-          backgroundImage: const NetworkImage(
-            'https://randomuser.me/api/portraits/men/1.jpg',
+          child: Text(
+            _getInitialLetter(),
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
         ),
         const SizedBox(width: 14),
@@ -47,9 +63,11 @@ class GreetingSection extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications, color: Colors.white, size: 26),
-          tooltip: 'Thông báo',
+          onPressed: () {
+            Navigator.of(context).pushNamed(StatisticsScreen.routeName);
+          },
+          icon: const Icon(Icons.stacked_bar_chart, color: Colors.white, size: 26),
+          tooltip: 'Thống kê',
         ),
       ],
     );

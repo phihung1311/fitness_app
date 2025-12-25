@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 import '../../../../../domain/entities/food.dart';
 
-/// States cho AdminFoodBloc
-/// Tách biệt hoàn toàn với MealState của User
+
 class AdminFoodState extends Equatable {
   final List<Food> foods;
-  final List<Food> displayedFoods; // Danh sách đã filter/search
+  final List<Food> displayedFoods;
   final bool isLoading;
   final bool isSubmitting;
   final String? errorMessage;
