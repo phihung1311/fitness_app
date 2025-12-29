@@ -22,12 +22,10 @@ class FoodDto {
   });
 
   factory FoodDto.fromJson(Map<String, dynamic> json) {
-    // Helper function để parse số an toàn (hỗ trợ cả String và num)
     double? _parseDouble(dynamic value) {
       if (value == null) return null;
       if (value is num) return value.toDouble();
       if (value is String) {
-        // Hỗ trợ cả dấu phẩy và chấm
         final normalized = value.replaceAll(',', '.');
         return double.tryParse(normalized);
       }

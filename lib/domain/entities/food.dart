@@ -5,7 +5,7 @@ class Food {
   final double? protein100g;
   final double? carbs100g;
   final double? fat100g;
-  final String? mealType; // breakfast, lunch, dinner, snack, all
+  final String? mealType;
   final String? imageUrl;
   final DateTime createdAt;
   final DateTime updatedAt;

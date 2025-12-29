@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/datasources/remote/auth_api.dart';
 import '../../data/datasources/remote/profile_api.dart';
+import '../../data/datasources/remote/progress_api.dart';
 import '../../data/datasources/remote/meal_api.dart';
 import '../../data/datasources/remote/exercise_api.dart';
 import '../../data/datasources/remote/admin/admin_food_api.dart';
@@ -25,7 +26,7 @@ import '../../domain/repositories/food_repository.dart';
 import '../../domain/repositories/meal_repository.dart';
 import '../../domain/repositories/exercise_repository.dart';
 import '../../domain/repositories/admin/admin_food_repository.dart';
-import '../../domain/repositories/admin/exercise/admin_exercise_repository.dart';
+import '../../domain/repositories/admin/admin_exercise_repository.dart';
 import '../../domain/repositories/admin/admin_user_repository.dart';
 import '../../domain/repositories/statistics_repository.dart';
 import '../../domain/usecases/auth/login.dart';
@@ -80,9 +81,10 @@ Future<void> setupDependencies() async {
     })
     ..registerLazySingleton<AuthApi>(() => AuthApi(injector()))
     ..registerLazySingleton<ProfileApi>(() => ProfileApi(injector(), injector()))
+    ..registerLazySingleton<ProgressApi>(() => ProgressApi(injector(), injector()))
     ..registerLazySingleton<MealApi>(() => MealApi(injector(), injector()))
     ..registerLazySingleton<ExerciseApi>(() => ExerciseApi(injector(), injector()))
-    // Admin APIs (tách biệt)
+    // Admin API
     ..registerLazySingleton<AdminFoodApi>(() => AdminFoodApi(injector(), injector()))
     ..registerLazySingleton<AdminExerciseApi>(() => AdminExerciseApi(injector(), injector()))
     ..registerLazySingleton<AdminUserApi>(() => AdminUserApi(injector(), injector()))
@@ -105,7 +107,7 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<ExerciseRepository>(
       () => ExerciseRepositoryImpl(injector()),
     )
-    // Admin Repositories (tách biệt)
+    // Admin Repositories
     ..registerLazySingleton<AdminFoodRepository>(
       () => AdminFoodRepositoryImpl(injector()),
     )
@@ -128,7 +130,7 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<DeleteMeal>(() => DeleteMeal(injector()))
     ..registerLazySingleton<GetExercises>(() => GetExercises(injector()))
     ..registerLazySingleton<GetExerciseDetail>(() => GetExerciseDetail(injector()))
-    // Admin UseCases (tách biệt)
+    // Admin UseCases
     ..registerLazySingleton<admin_get_foods.GetFoods>(() => admin_get_foods.GetFoods(injector()))
     ..registerLazySingleton<admin_add_food.AddFood>(() => admin_add_food.AddFood(injector()))
     ..registerLazySingleton<admin_update_food.UpdateFood>(() => admin_update_food.UpdateFood(injector()))

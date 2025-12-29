@@ -25,7 +25,7 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
   String _selectedMealType = 'all';
   String? _selectedImagePath;
   final ImagePicker _picker = ImagePicker();
-  bool _isSubmitting = false; // Flag để tránh submit nhiều lần
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -38,7 +38,6 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
   }
 
   Future<void> _pickImage() async {
-    // Hiển thị dialog cho phép chọn từ gallery hoặc camera
     final source = await showDialog<ImageSource>(
       context: context,
       builder: (context) => AlertDialog(
@@ -113,17 +112,14 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
     }
   }
 
-  // Helper function để parse số từ input (hỗ trợ cả dấu phẩy và chấm)
   int? _parseInt(String? value) {
     if (value == null || value.trim().isEmpty) return null;
-    // Thay dấu phẩy bằng chấm, sau đó parse và làm tròn
     final normalized = value.replaceAll(',', '.').trim();
     final doubleValue = double.tryParse(normalized);
     return doubleValue?.round();
   }
 
   void _submit() {
-    // Tránh submit nhiều lần
     if (_isSubmitting) return;
 
     if (!_formKey.currentState!.validate()) {
@@ -170,7 +166,7 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
       },
       listener: (context, state) {
         if (state.errorMessage != null) {
-          _isSubmitting = false; // Reset flag khi có lỗi
+          _isSubmitting = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage!),
@@ -179,15 +175,13 @@ class _AdminAddFoodScreenState extends State<AdminAddFoodScreen> {
           );
         }
         if (state.successMessage != null) {
-          _isSubmitting = false; // Reset flag khi thành công
+          _isSubmitting = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.successMessage!),
               backgroundColor: Colors.green,
             ),
           );
-          // Quay lại màn hình trước sau khi thêm thành công
-          // Dùng Future.microtask để tránh pop ngay trong listener
           Future.microtask(() {
             if (mounted) {
               Navigator.of(context).pop(true);

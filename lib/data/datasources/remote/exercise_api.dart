@@ -57,7 +57,7 @@ class ExerciseApi {
     }
   }
 
-  // Lấy random exercises (cho homepage)
+  // Lấy random exercises
   Future<List<ExerciseDto>> getRandomExercises({int limit = 4}) async {
     try {
       final token = _tokenStorage.readToken();
@@ -78,7 +78,7 @@ class ExerciseApi {
     }
   }
 
-  // Thêm bài tập vào hôm nay hoặc lên lịch
+  // them bai tap or len lich
   Future<Map<String, dynamic>> addUserExercise({
     required int exerciseId,
     String? workoutDate,
@@ -109,7 +109,7 @@ class ExerciseApi {
     }
   }
 
-  // Thêm vào yêu thích
+  //add yeu thich
   Future<Map<String, dynamic>> addToFavorites(int exerciseId) async {
     try {
       final token = _tokenStorage.readToken();
@@ -128,7 +128,7 @@ class ExerciseApi {
     }
   }
 
-  // Lấy tổng calories hôm nay (meals + exercises)
+  // Lấy tổng calories hôm nay
   Future<Map<String, dynamic>> getTodayCalories({String? date}) async {
     try {
       final token = _tokenStorage.readToken();
@@ -147,7 +147,7 @@ class ExerciseApi {
     }
   }
 
-  // Lấy lịch sử tập luyện
+  //lich su tap
   Future<Map<String, dynamic>> getExerciseHistory(String date) async {
     try {
       final token = _tokenStorage.readToken();
@@ -166,7 +166,7 @@ class ExerciseApi {
     }
   }
 
-  // Lấy danh sách yêu thích
+  // ds yeu thich
   Future<List<dynamic>> getFavorites() async {
     try {
       final token = _tokenStorage.readToken();
@@ -184,7 +184,7 @@ class ExerciseApi {
     }
   }
 
-  // Xóa khỏi yêu thích
+  // Xoa yeu thich
   Future<void> removeFromFavorites(int exerciseId) async {
     try {
       final token = _tokenStorage.readToken();

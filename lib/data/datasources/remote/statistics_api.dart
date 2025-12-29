@@ -10,7 +10,7 @@ class StatisticsApi {
 
   StatisticsApi(this._dio, this._tokenStorage);
 
-  /// Lấy thống kê calories theo tuần/tháng
+  //lay thong ke tuan/thang
   Future<CaloriesStatsDto> getCaloriesStats({
     required String period,
     String? startDate,
@@ -45,7 +45,7 @@ class StatisticsApi {
     }
   }
 
-  /// Lấy dự đoán weight và thời gian đạt mục tiêu
+  //du doan weight va thoi gian hoan thanh
   Future<WeightPredictionDto> getWeightPrediction() async {
     try {
       final token = _tokenStorage.readToken();

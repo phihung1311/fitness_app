@@ -4,12 +4,12 @@ class UserMeal {
   final int id;
   final int userId;
   final int? foodId;
-  final String? mealSession; // breakfast, lunch, dinner, snack
+  final String? mealSession;
   final int? weightGrams;
   final int? calories;
   final DateTime? mealDate;
   final DateTime createdAt;
-  final Food? food; // Relation
+  final Food? food;
 
   const UserMeal({
     required this.id,

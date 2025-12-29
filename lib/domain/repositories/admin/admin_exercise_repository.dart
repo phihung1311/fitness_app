@@ -1,7 +1,5 @@
-import '../../../entities/exercise.dart';
+import '../../entities/exercise.dart';
 
-/// Repository interface cho Admin quản lý bài tập
-/// Tách biệt hoàn toàn với ExerciseRepository của User
 abstract class AdminExerciseRepository {
   Future<List<Exercise>> getExercises();
   Future<Exercise> addExercise({

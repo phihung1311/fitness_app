@@ -164,7 +164,8 @@ class AdminHomeScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Đăng xuất'),
+            child:
+            const Text('Đăng xuất'),
           ),
         ],
       ),

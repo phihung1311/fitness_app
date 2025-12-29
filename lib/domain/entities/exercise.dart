@@ -4,11 +4,11 @@ class Exercise extends Equatable {
   final int id;
   final String name;
   final String? muscleGroup;
-  final String? difficulty; // beginner, intermediate, advanced
+  final String? difficulty;
   final int? sets;
   final int? reps;
   final int? restTimeSec;
-  final int? caloriesBurned; // per set
+  final int? caloriesBurned;
   final String? instructions;
   final String? imageUrl;
 

@@ -56,12 +56,12 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen>
       final getProfileMetrics = injector<GetProfileMetrics>();
       final metrics = await getProfileMetrics();
       setState(() {
-        _userWeight = metrics.weight ?? 70.0; // Default 70kg
+        _userWeight = metrics.weight ?? 70.0;
         _isLoadingWeight = false;
       });
     } catch (e) {
       setState(() {
-        _userWeight = 70.0; // Default fallback
+        _userWeight = 70.0;
         _isLoadingWeight = false;
       });
     }
@@ -94,11 +94,11 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen>
   Color _getDifficultyColor() {
     switch (widget.exercise.difficulty?.toLowerCase()) {
       case 'beginner':
-        return const Color(0xFF52C41A); // Green
+        return const Color(0xFF52C41A);
       case 'intermediate':
-        return const Color(0xFFF7B731); // Yellow
+        return const Color(0xFFF7B731);
       case 'advanced':
-        return const Color(0xFFFF6B6B); // Red
+        return const Color(0xFFFF6B6B);
       default:
         return Colors.grey;
     }

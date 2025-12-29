@@ -1,6 +1,5 @@
 import '../../../repositories/admin/admin_food_repository.dart';
 
-/// UseCase: Xóa món ăn (chỉ admin)
 class DeleteFood {
   final AdminFoodRepository _repository;
 

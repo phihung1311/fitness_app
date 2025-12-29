@@ -7,8 +7,6 @@ import '../../../../../domain/usecases/admin/exercise/delete_exercise.dart';
 import 'admin_exercise_event.dart';
 import 'admin_exercise_state.dart';
 
-/// BLoC cho Admin quản lý bài tập
-/// Tách biệt hoàn toàn với ExerciseBloc của User
 class AdminExerciseBloc extends Bloc<AdminExerciseEvent, AdminExerciseState> {
   final GetExercises _getExercises;
   final AddExercise _addExercise;

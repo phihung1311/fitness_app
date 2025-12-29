@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../routes/app_router.dart';
 import '../screens/statistics/statistics_screen.dart';
 
 class GreetingSection extends StatelessWidget {
@@ -16,7 +15,6 @@ class GreetingSection extends StatelessWidget {
 
   String _getDisplayName() {
     if (userName != null && userName!.trim().isNotEmpty) {
-      // Lấy từ cuối cùng (thường là tên chính)
       return userName!.trim().split(' ').last;
     }
     return 'Bạn';
@@ -25,10 +23,9 @@ class GreetingSection extends StatelessWidget {
   String _getInitialLetter() {
     final displayName = _getDisplayName();
     if (displayName.isNotEmpty) {
-      // Lấy chữ cái đầu, chuyển thành in hoa
       return displayName[0].toUpperCase();
     }
-    return 'B'; // fallback
+    return 'B';
   }
   @override
   Widget build(BuildContext context) {

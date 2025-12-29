@@ -340,7 +340,7 @@ class _AdminUserManagementScreenState extends State<AdminUserManagementScreen> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                maxLines: 1,
+                                maxLines  : 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

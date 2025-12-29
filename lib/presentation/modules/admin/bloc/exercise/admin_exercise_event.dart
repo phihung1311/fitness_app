@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Events cho AdminExerciseBloc
-/// Tách biệt hoàn toàn với ExerciseEvent của User
 abstract class AdminExerciseEvent extends Equatable {
   const AdminExerciseEvent();
 
@@ -9,12 +7,12 @@ abstract class AdminExerciseEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Load danh sách bài tập
+// Load ds
 class LoadExercises extends AdminExerciseEvent {
   const LoadExercises();
 }
 
-/// Thêm bài tập mới
+//add btap
 class AddExerciseEvent extends AdminExerciseEvent {
   final String name;
   final String muscleGroup;
@@ -52,7 +50,7 @@ class AddExerciseEvent extends AdminExerciseEvent {
       ];
 }
 
-/// Cập nhật bài tập
+//update btap
 class UpdateExerciseEvent extends AdminExerciseEvent {
   final int exerciseId;
   final String? name;
@@ -93,7 +91,7 @@ class UpdateExerciseEvent extends AdminExerciseEvent {
       ];
 }
 
-/// Xóa bài tập
+//xoa
 class DeleteExerciseEvent extends AdminExerciseEvent {
   final int exerciseId;
 
@@ -103,7 +101,7 @@ class DeleteExerciseEvent extends AdminExerciseEvent {
   List<Object?> get props => [exerciseId];
 }
 
-/// Tìm kiếm bài tập
+//timkiem
 class SearchExercisesEvent extends AdminExerciseEvent {
   final String query;
 
@@ -113,7 +111,7 @@ class SearchExercisesEvent extends AdminExerciseEvent {
   List<Object?> get props => [query];
 }
 
-/// Lọc bài tập theo nhóm cơ
+//loc nhom cơ
 class FilterExercisesByMuscleGroupEvent extends AdminExerciseEvent {
   final String? muscleGroup;
 
@@ -123,7 +121,7 @@ class FilterExercisesByMuscleGroupEvent extends AdminExerciseEvent {
   List<Object?> get props => [muscleGroup];
 }
 
-/// Lọc bài tập theo độ khó
+//loc theo do khó
 class FilterExercisesByDifficultyEvent extends AdminExerciseEvent {
   final String? difficulty;
 

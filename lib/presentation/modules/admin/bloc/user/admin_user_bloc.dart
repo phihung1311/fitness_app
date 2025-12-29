@@ -117,6 +117,7 @@ class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     }
 
     emit(state.copyWith(displayedUsers: filtered));
+
   }
 
   void _onSearchUsers(
@@ -144,7 +145,9 @@ class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
       event.roleId,
       state.selectedLockStatusFilter,
     );
-    emit(state.copyWith(selectedRoleFilter: event.roleId));
+    emit(state.copyWith(
+      selectedRoleFilter: event.roleId,
+    ));
   }
 
   void _onFilterUsersByLockStatus(
@@ -158,7 +161,9 @@ class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
       state.selectedRoleFilter,
       event.isLocked,
     );
-    emit(state.copyWith(selectedLockStatusFilter: event.isLocked));
+    emit(state.copyWith(
+      selectedLockStatusFilter: event.isLocked,
+    ));
   }
 
   Future<void> _onUpdateUserRole(
@@ -170,9 +175,9 @@ class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     emit(state.copyWith(isSubmitting: true, errorMessage: null, successMessage: null));
     try {
       await _updateUserRole.execute(event.userId, event.roleId);
-      // Reload danh sách và cập nhật user trong danh sách
+      // Reload ds và cập nhật user trong ds
       final users = await _getUsers.execute();
-      // Cập nhật selectedUser nếu đang xem user này
+      // Cập nhật selectedUser nếu đang xem user
       User? updatedSelectedUser;
       if (state.selectedUser?.id == event.userId) {
         updatedSelectedUser = users.firstWhere(
@@ -211,9 +216,9 @@ class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     emit(state.copyWith(isSubmitting: true, errorMessage: null, successMessage: null));
     try {
       await _lockUser.execute(event.userId);
-      // Reload danh sách và cập nhật user trong danh sách
+      // Reload ds và cập nhật user trong ds
       final users = await _getUsers.execute();
-      // Cập nhật selectedUser nếu đang xem user này
+      // Cập nhật selectedUser nếu đang xem user
       User? updatedSelectedUser;
       if (state.selectedUser?.id == event.userId) {
         try {
@@ -259,9 +264,9 @@ class AdminUserBloc extends Bloc<AdminUserEvent, AdminUserState> {
     emit(state.copyWith(isSubmitting: true, errorMessage: null, successMessage: null));
     try {
       await _unlockUser.execute(event.userId);
-      // Reload danh sách và cập nhật user trong danh sách
+      // Reload ds và cập nhật user trong ds
       final users = await _getUsers.execute();
-      // Cập nhật selectedUser nếu đang xem user này
+      // Cập nhật selectedUser nếu đang xem user
       User? updatedSelectedUser;
       if (state.selectedUser?.id == event.userId) {
         try {

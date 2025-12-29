@@ -1,6 +1,5 @@
-import '../../../repositories/admin/exercise/admin_exercise_repository.dart';
+import '../../../repositories/admin/admin_exercise_repository.dart';
 
-/// UseCase: Xóa bài tập (chỉ admin)
 class DeleteExercise {
   final AdminExerciseRepository _repository;
 

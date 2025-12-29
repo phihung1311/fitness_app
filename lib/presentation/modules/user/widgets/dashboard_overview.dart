@@ -38,7 +38,7 @@ class DashboardOverview extends StatelessWidget {
               final metrics = state.metrics;
               final targetCalories = metrics?.calorieGoal ?? 2000;
               
-              // Load tổng calories hôm nay (meals + exercises)
+              // Load tổng calories hôm nay
               return FutureBuilder<Map<String, dynamic>>(
                 future: injector<ExerciseApi>().getTodayCalories(),
                 builder: (context, snapshot) {
@@ -291,7 +291,7 @@ class DashboardOverview extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Dành cho bạn hôm nay',
+                                  'Bạn tập gì hôm nay?',
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,

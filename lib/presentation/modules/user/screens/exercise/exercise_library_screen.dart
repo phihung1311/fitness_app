@@ -87,7 +87,6 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                   ),
                   Row(
                     children: [
-                      // History Button
                       IconButton(
                         icon: const Icon(
                           Icons.history_rounded,
@@ -103,7 +102,6 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                         },
                         tooltip: 'Lịch sử tập luyện',
                       ),
-                      // Favorites Button
                       IconButton(
                         icon: const Icon(
                           Icons.star_rounded,

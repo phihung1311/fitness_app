@@ -50,10 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         BlocProvider(
           create: (context) => MealBloc(
-            injector(), // AddMeal
-            injector(), // GetTodayMeals
-            injector(), // UpdateMeal
-            injector(), // DeleteMeal
+            injector(),
+            injector(),
+            injector(),
+            injector(),
           )..add(LoadTodayMeals()),
           child: const NutritionScreen(),
         ),

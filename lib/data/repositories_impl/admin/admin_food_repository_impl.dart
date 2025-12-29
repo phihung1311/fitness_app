@@ -2,8 +2,6 @@ import '../../../domain/entities/food.dart';
 import '../../../domain/repositories/admin/admin_food_repository.dart';
 import '../../datasources/remote/admin/admin_food_api.dart';
 
-/// Repository implementation cho Admin quản lý món ăn
-/// Tách biệt hoàn toàn với FoodRepositoryImpl của User
 class AdminFoodRepositoryImpl implements AdminFoodRepository {
   final AdminFoodApi _api;
 

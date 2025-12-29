@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../../../../domain/entities/exercise.dart';
 
-/// States cho AdminExerciseBloc
-/// Tách biệt hoàn toàn với ExerciseState của User
+
 class AdminExerciseState extends Equatable {
   final List<Exercise> exercises;
   final List<Exercise> displayedExercises; // Danh sách đã filter/search

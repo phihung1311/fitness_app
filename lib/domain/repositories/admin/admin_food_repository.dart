@@ -1,7 +1,5 @@
 import '../../entities/food.dart';
 
-/// Repository interface cho Admin quản lý món ăn
-/// Tách biệt hoàn toàn với FoodRepository của User
 abstract class AdminFoodRepository {
   Future<List<Food>> getFoods();
   Future<Food> addFood({

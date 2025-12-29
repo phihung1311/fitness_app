@@ -3,15 +3,13 @@ import '../../../../core/constants/api_endpoints.dart';
 import '../../../../services/storage/token_storage.dart';
 import '../../../dtos/food_dto.dart';
 
-/// API client cho Admin quản lý món ăn
-/// Tách biệt hoàn toàn với FoodApi của User
 class AdminFoodApi {
   final Dio _dio;
   final TokenStorage _tokenStorage;
 
   AdminFoodApi(this._dio, this._tokenStorage);
 
-  /// Lấy danh sách tất cả món ăn (chỉ admin)
+  //lay ds all mon an
   Future<List<FoodDto>> getFoods() async {
     try {
       final token = _tokenStorage.readToken();
@@ -31,7 +29,7 @@ class AdminFoodApi {
     }
   }
 
-  /// Thêm món ăn mới (chỉ admin)
+  //them mon an
   Future<FoodDto> addFood({
     required String name,
     required int calories100g,
@@ -69,7 +67,7 @@ class AdminFoodApi {
     }
   }
 
-  /// Cập nhật món ăn (chỉ admin)
+  //update mon an
   Future<void> updateFood({
     required int foodId,
     String? name,
@@ -107,7 +105,7 @@ class AdminFoodApi {
     }
   }
 
-  /// Xóa món ăn (chỉ admin)
+  //xoa
   Future<void> deleteFood(int foodId) async {
     try {
       final token = _tokenStorage.readToken();
@@ -124,7 +122,7 @@ class AdminFoodApi {
     }
   }
 
-  /// Upload ảnh riêng (chỉ admin)
+  // Upload ảnh
   Future<String> uploadImage(String imagePath) async {
     try {
       final token = _tokenStorage.readToken();

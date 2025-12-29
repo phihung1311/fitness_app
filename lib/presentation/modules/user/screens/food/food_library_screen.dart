@@ -22,6 +22,7 @@ class _FoodLibraryScreenState extends State<FoodLibraryScreen> {
     {'label': 'Bữa sáng', 'value': 'breakfast'},
     {'label': 'Bữa trưa', 'value': 'lunch'},
     {'label': 'Bữa tối', 'value': 'dinner'},
+    {'label': 'Bữa phụ', 'value': 'snack'},
   ];
 
   @override
@@ -312,7 +313,7 @@ class _FoodLibraryScreenState extends State<FoodLibraryScreen> {
                         width: 32,
                         height: 32,
                         decoration: const BoxDecoration(
-                          color: Color(0xFF52C41A), // Bright green button
+                          color: Color(0xFF52C41A),
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(

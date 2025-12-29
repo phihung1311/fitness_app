@@ -1,7 +1,6 @@
 import '../../../entities/food.dart';
 import '../../../repositories/admin/admin_food_repository.dart';
 
-/// UseCase: Thêm món ăn mới (chỉ admin)
 class AddFood {
   final AdminFoodRepository _repository;
 

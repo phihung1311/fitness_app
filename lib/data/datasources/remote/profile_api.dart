@@ -102,5 +102,26 @@ class ProfileApi {
       throw Exception('Lỗi cập nhật thông tin: ${e.message}');
     }
   }
+
+  Future<void> updateWeightGoal({
+    required double weightGoal,
+  }) async {
+    try {
+      final token = _tokenStorage.readToken();
+      await _dio.put(
+        '${ApiEndpoints.baseUrl}/user/profile/weight-goal',
+        data: {
+          'weight_goal': weightGoal,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+    } on DioException catch (e) {
+      throw Exception('Lỗi cập nhật cân nặng mục tiêu: ${e.message}');
+    }
+  }
 }
 

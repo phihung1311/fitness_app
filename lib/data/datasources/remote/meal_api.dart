@@ -46,7 +46,7 @@ class MealApi {
     }
   }
 
-  // Lấy random foods (cho homepage)
+  // Lấy random foods
   Future<List<FoodDto>> getRandomFoods({int limit = 4}) async {
     try {
       final token = _tokenStorage.readToken();
@@ -86,7 +86,7 @@ class MealApi {
     }
   }
 
-  // Lấy meals hôm nay (grouped)
+  // Lấy meals hôm nay
   Future<Map<String, dynamic>> getTodayMeals() async {
     try {
       final token = _tokenStorage.readToken();

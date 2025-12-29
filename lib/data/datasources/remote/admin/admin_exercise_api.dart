@@ -3,15 +3,13 @@ import '../../../../core/constants/api_endpoints.dart';
 import '../../../../services/storage/token_storage.dart';
 import '../../../dtos/exercise_dto.dart';
 
-/// API client cho Admin quản lý bài tập
-/// Tách biệt hoàn toàn với ExerciseApi của User
 class AdminExerciseApi {
   final Dio _dio;
   final TokenStorage _tokenStorage;
 
   AdminExerciseApi(this._dio, this._tokenStorage);
 
-  /// Lấy danh sách tất cả bài tập (chỉ admin)
+  // Lấy ds all bai tap
   Future<List<ExerciseDto>> getExercises() async {
     try {
       final token = _tokenStorage.readToken();
@@ -32,7 +30,7 @@ class AdminExerciseApi {
     }
   }
 
-  /// Thêm bài tập mới (chỉ admin)
+  //them bai tap
   Future<ExerciseDto> addExercise({
     required String name,
     required String muscleGroup,
@@ -74,7 +72,7 @@ class AdminExerciseApi {
     }
   }
 
-  /// Cập nhật bài tập (chỉ admin)
+  // update bai tap
   Future<void> updateExercise({
     required int exerciseId,
     String? name,
@@ -116,7 +114,7 @@ class AdminExerciseApi {
     }
   }
 
-  /// Xóa bài tập (chỉ admin)
+  // Xóa
   Future<void> deleteExercise(int exerciseId) async {
     try {
       final token = _tokenStorage.readToken();

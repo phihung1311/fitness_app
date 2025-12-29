@@ -128,7 +128,7 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
                   ),
                 ),
 
-                // Filter Buttons - Muscle Group
+                // loc nhom co
                 SizedBox(
                   height: 40,
                   child: ListView.builder(
@@ -179,7 +179,7 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
 
                 const SizedBox(height: 8),
 
-                // Filter Buttons - Difficulty
+                //loc do kho
                 SizedBox(
                   height: 40,
                   child: ListView.builder(
@@ -230,7 +230,7 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
 
                 const SizedBox(height: 16),
 
-                // Exercise List
+                // ds bai tap
                 Expanded(
                   child: state.displayedExercises.isEmpty
                       ? Center(
@@ -259,7 +259,7 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
                           padding: const EdgeInsets.only(
                             left: 16,
                             right: 16,
-                            bottom: 90, // Padding cho FAB
+                            bottom: 90,
                           ),
                           itemCount: state.displayedExercises.length,
                           itemBuilder: (context, index) {
@@ -320,7 +320,7 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           _showDeleteConfirmation(context, exercise);
-          return false; // Không tự động dismiss, đợi user confirm
+          return false;
         }
         return false;
       },
@@ -478,7 +478,6 @@ class _AdminExerciseManagementScreenState extends State<AdminExerciseManagementS
       );
     }
 
-    // Server upload path
     if (imageUrl.startsWith('/uploads/')) {
       final baseUrl = ApiEndpoints.baseUrl.replaceAll('/api', '');
       final fullUrl = '$baseUrl$imageUrl';

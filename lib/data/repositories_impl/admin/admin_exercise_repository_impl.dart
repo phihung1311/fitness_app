@@ -1,9 +1,7 @@
 import '../../../domain/entities/exercise.dart';
-import '../../../domain/repositories/admin/exercise/admin_exercise_repository.dart';
+import '../../../domain/repositories/admin/admin_exercise_repository.dart';
 import '../../datasources/remote/admin/admin_exercise_api.dart';
 
-/// Repository implementation cho Admin quản lý bài tập
-/// Tách biệt hoàn toàn với ExerciseRepositoryImpl của User
 class AdminExerciseRepositoryImpl implements AdminExerciseRepository {
   final AdminExerciseApi _api;
 

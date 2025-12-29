@@ -1,6 +1,5 @@
 import '../../../repositories/admin/admin_food_repository.dart';
 
-/// UseCase: Cập nhật món ăn (chỉ admin)
 class UpdateFood {
   final AdminFoodRepository _repository;
 

@@ -2,7 +2,6 @@ import '../../../domain/entities/user.dart';
 import '../../../domain/repositories/admin/admin_user_repository.dart';
 import '../../datasources/remote/admin/admin_user_api.dart';
 
-/// Repository implementation cho Admin quản lý tài khoản
 class AdminUserRepositoryImpl implements AdminUserRepository {
   final AdminUserApi _api;
 

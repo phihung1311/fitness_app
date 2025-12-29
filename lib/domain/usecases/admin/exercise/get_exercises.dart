@@ -1,7 +1,6 @@
 import '../../../entities/exercise.dart';
-import '../../../repositories/admin/exercise/admin_exercise_repository.dart';
+import '../../../repositories/admin/admin_exercise_repository.dart';
 
-/// UseCase: Lấy danh sách bài tập (chỉ admin)
 class GetExercises {
   final AdminExerciseRepository _repository;
 

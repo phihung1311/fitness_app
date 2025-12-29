@@ -79,10 +79,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (e.type == DioExceptionType.connectionError ||
         e.type == DioExceptionType.unknown) {
       return AppException(
-        'Không thể kết nối đến server. Vui lòng kiểm tra:\n'
-        '1. Backend đã chạy chưa?\n'
-        '2. URL đúng chưa? (http://10.0.2.2:3000/api)\n'
-        '3. Kết nối mạng ổn định không?',
+        'Không thể kết nối đến server. Vui lòng kiểm tra:\n',
         code: 'CONNECTION_ERROR',
       );
     }

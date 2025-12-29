@@ -70,7 +70,7 @@ class SearchUsersEvent extends AdminUserEvent {
 }
 
 class FilterUsersByRoleEvent extends AdminUserEvent {
-  final int? roleId; // null = tất cả, 1 = user, 2 = admin
+  final int? roleId;
 
   const FilterUsersByRoleEvent(this.roleId);
 
@@ -79,7 +79,7 @@ class FilterUsersByRoleEvent extends AdminUserEvent {
 }
 
 class FilterUsersByLockStatusEvent extends AdminUserEvent {
-  final bool? isLocked; // null = tất cả, true = đã khóa, false = chưa khóa
+  final bool? isLocked;
 
   const FilterUsersByLockStatusEvent(this.isLocked);
 

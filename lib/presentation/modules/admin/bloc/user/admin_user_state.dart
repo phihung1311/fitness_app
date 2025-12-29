@@ -10,8 +10,8 @@ class AdminUserState extends Equatable {
   final String? errorMessage;
   final String? successMessage;
   final String searchQuery;
-  final int? selectedRoleFilter; // null = tất cả, 1 = user, 2 = admin
-  final bool? selectedLockStatusFilter; // null = tất cả, true = đã khóa, false = chưa khóa
+  final int? selectedRoleFilter;
+  final bool? selectedLockStatusFilter;
 
   const AdminUserState({
     this.users = const [],

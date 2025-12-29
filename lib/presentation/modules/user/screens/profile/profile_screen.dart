@@ -4,6 +4,7 @@ import '../../../../../core/di/injector.dart';
 import '../../../../../data/datasources/remote/profile_api.dart';
 import '../../../../../services/storage/token_storage.dart';
 import '../../../auth/screens/login_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,7 +14,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Future<_ProfileViewData> _profileFuture;
+  late Future<ProfileViewData> _profileFuture;
 
   @override
   void initState() {
@@ -21,12 +22,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _profileFuture = _loadProfile();
   }
 
-  Future<_ProfileViewData> _loadProfile() async {
+  Future<ProfileViewData> _loadProfile() async {
     final api = injector<ProfileApi>();
     final profileJson = await api.getProfile();
     final metrics = await api.getProfileMetrics();
 
-    return _ProfileViewData(
+    return ProfileViewData(
       name: profileJson['name'] as String?,
       email: profileJson['email'] as String?,
       gender: profileJson['gender'] as String?,
@@ -82,171 +83,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _showEditDialog(_ProfileViewData current) async {
-    final nameCtrl = TextEditingController(text: current.name ?? '');
-    final ageCtrl = TextEditingController(
-      text: current.age != null ? current.age.toString() : '',
+  Future<void> _navigateToEditProfile(ProfileViewData current) async {
+    final result = await Navigator.of(context).pushNamed(
+      EditProfileScreen.routeName,
+      arguments: current,
     );
-    String genderValue = (current.gender ?? 'male').toLowerCase();
 
-    await showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1C1E1D),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Chỉnh sửa thông tin',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.close, color: Colors.white70),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTextField(
-                      controller: nameCtrl,
-                      label: 'Họ và tên',
-                      hint: 'Nhập tên của bạn',
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTextField(
-                      controller: ageCtrl,
-                      label: 'Tuổi',
-                      hint: 'Ví dụ: 25',
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Giới tính',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0D0F0E),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFF2A2C2B)),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: genderValue,
-                          dropdownColor: const Color(0xFF1C1E1D),
-                          iconEnabledColor: Colors.white70,
-                          items: const [
-                            DropdownMenuItem(
-                              value: 'male',
-                              child: Text('Nam'),
-                            ),
-                            DropdownMenuItem(
-                              value: 'female',
-                              child: Text('Nữ'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              setModalState(() {
-                                genderValue = value;
-                              });
-                            }
-                          },
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF52C41A),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () async {
-                          try {
-                            final api = injector<ProfileApi>();
-                            final ageVal = int.tryParse(ageCtrl.text.trim());
-                            await api.updateProfile(
-                              name: nameCtrl.text.trim().isEmpty
-                                  ? null
-                                  : nameCtrl.text.trim(),
-                              gender: genderValue,
-                              age: ageVal,
-                            );
-                            if (mounted) {
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Đã cập nhật thông tin'),
-                                  backgroundColor: Color(0xFF52C41A),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            }
-                            setState(() {
-                              _profileFuture = _loadProfile();
-                            });
-                          } catch (e) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Lỗi: ${e.toString()}'),
-                                  backgroundColor: Colors.red,
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: const Text(
-                          'Lưu thay đổi',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+    if (result == true && mounted) {
+      setState(() {
+        _profileFuture = _loadProfile();
+      });
+    }
   }
 
   @override
@@ -254,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0D0F0E),
       body: SafeArea(
-        child: FutureBuilder<_ProfileViewData>(
+        child: FutureBuilder<ProfileViewData>(
           future: _profileFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -311,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _PrimaryButton(
                     icon: Icons.edit_rounded,
                     label: 'Chỉnh sửa thông tin',
-                    onPressed: () => _showEditDialog(data),
+                    onPressed: () => _navigateToEditProfile(data),
                   ),
                   const SizedBox(height: 12),
                   _DangerButton(
@@ -338,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  String _estimateGoalEta(_ProfileViewData data) {
+  String _estimateGoalEta(ProfileViewData data) {
     final double? weight = data.weight;
     final double? weightGoal = data.weightGoal;
     final int? tdee = data.tdee;
@@ -425,45 +272,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    String? hint,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 13,
-          ),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.4)),
-            filled: true,
-            fillColor: const Color(0xFF0D0F0E),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A2C2B)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF52C41A)),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 class _Header extends StatelessWidget {
@@ -477,7 +285,7 @@ class _Header extends StatelessWidget {
       children: [
         const SizedBox(width: 8),
         const Text(
-          'Hồ sơ',
+          'Hồ sơ cá nhân',
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,
@@ -546,7 +354,7 @@ class _SectionTitle extends StatelessWidget {
 class _StatGrid extends StatelessWidget {
   const _StatGrid({required this.data});
 
-  final _ProfileViewData data;
+  final ProfileViewData data;
 
   @override
   Widget build(BuildContext context) {
@@ -728,7 +536,8 @@ class _DangerButton extends StatelessWidget {
   }
 }
 
-class _ProfileViewData {
+// Export để có thể sử dụng ở các file khác
+class ProfileViewData {
   final String? name;
   final String? email;
   final String? gender;
@@ -742,7 +551,7 @@ class _ProfileViewData {
   final double? weightGoal;
   final String? goalType;
 
-  _ProfileViewData({
+  ProfileViewData({
     required this.name,
     required this.email,
     required this.gender,

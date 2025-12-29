@@ -24,7 +24,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF0D0F0E), // Pure black background
+        color: Color(0xFF0D0F0E),
       ),
       child: SafeArea(
         child: BlocBuilder<MealBloc, MealState>(
@@ -65,7 +65,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Dinh dưỡng hôm nay',
+                            'Bữa ăn hôm nay',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -332,7 +332,7 @@ class _NutritionScreenState extends State<NutritionScreen> {
     final mealBloc = context.read<MealBloc>();
     showDialog(
       context: context,
-      useRootNavigator: false, // giữ trong scope của MealBloc hiện tại
+      useRootNavigator: false,
       builder: (context) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1C1E1D),

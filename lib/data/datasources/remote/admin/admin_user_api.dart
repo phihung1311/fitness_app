@@ -3,14 +3,13 @@ import '../../../../core/constants/api_endpoints.dart';
 import '../../../../services/storage/token_storage.dart';
 import '../../../dtos/user_dto.dart';
 
-/// API client cho Admin quản lý tài khoản
 class AdminUserApi {
   final Dio _dio;
   final TokenStorage _tokenStorage;
 
   AdminUserApi(this._dio, this._tokenStorage);
 
-  /// Lấy danh sách tất cả users (chỉ admin)
+  //lay ds user
   Future<List<UserDto>> getUsers() async {
     try {
       final token = _tokenStorage.readToken();
@@ -30,7 +29,7 @@ class AdminUserApi {
     }
   }
 
-  /// Lấy chi tiết 1 user (chỉ admin)
+  //lay chi tiet
   Future<UserDto> getUserDetail(int userId) async {
     try {
       final token = _tokenStorage.readToken();
@@ -48,7 +47,7 @@ class AdminUserApi {
     }
   }
 
-  /// Cập nhật role của user (chỉ admin)
+  //update role
   Future<void> updateUserRole(int userId, int roleId) async {
     try {
       final token = _tokenStorage.readToken();
@@ -67,7 +66,7 @@ class AdminUserApi {
     }
   }
 
-  /// Khóa user (chỉ admin)
+  //khoa user
   Future<void> lockUser(int userId) async {
     try {
       final token = _tokenStorage.readToken();
@@ -79,7 +78,7 @@ class AdminUserApi {
           },
         ),
       );
-      // Kiểm tra response có message không
+      // Kiểm tra response
       if (response.data != null && response.data['message'] != null) {
         // Success
         return;
@@ -97,7 +96,7 @@ class AdminUserApi {
     }
   }
 
-  /// Mở khóa user (chỉ admin)
+  // Mở khóa
   Future<void> unlockUser(int userId) async {
     try {
       final token = _tokenStorage.readToken();
@@ -127,7 +126,7 @@ class AdminUserApi {
     }
   }
 
-  /// Xóa user (chỉ admin)
+  // Xóa
   Future<void> deleteUser(int userId) async {
     try {
       final token = _tokenStorage.readToken();

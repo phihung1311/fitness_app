@@ -7,6 +7,7 @@ import '../modules/auth/screens/login_screen.dart';
 import '../modules/auth/screens/register_screen.dart';
 import '../modules/user/screens/home_screen.dart';
 import '../modules/user/screens/profile/onboarding_profile_screen.dart';
+import '../modules/user/screens/profile/edit_profile_screen.dart';
 import '../modules/admin/screens/admin_home_screen.dart';
 import '../modules/admin/screens/food/admin_add_food_screen.dart';
 import '../modules/admin/screens/food/admin_edit_food_screen.dart';
@@ -22,6 +23,7 @@ import '../../../domain/entities/exercise.dart';
 import '../../../domain/entities/user.dart';
 import '../../core/di/injector.dart';
 import '../guards/admin_route_guard.dart';
+import '../modules/user/screens/profile/profile_screen.dart' show ProfileViewData;
 
 class AppRouter {
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -147,6 +149,11 @@ class AppRouter {
       case StatisticsScreen.routeName:
         return MaterialPageRoute(
           builder: (_) => const StatisticsScreen(),
+        );
+      case EditProfileScreen.routeName:
+        final profileData = settings.arguments as ProfileViewData?;
+        return MaterialPageRoute(
+          builder: (_) => EditProfileScreen(initialData: profileData),
         );
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
