@@ -5,6 +5,7 @@ import '../../bloc/food/food_bloc.dart';
 import '../../bloc/food/food_event.dart';
 import '../../bloc/food/food_state.dart';
 import 'food_detail_screen.dart';
+import 'meal_history_screen.dart';
 
 class FoodLibraryScreen extends StatefulWidget {
   const FoodLibraryScreen({super.key});
@@ -48,15 +49,32 @@ class _FoodLibraryScreenState extends State<FoodLibraryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Thư viện Món ăn',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Thư viện Món ăn',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.history, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MealHistoryScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
+                ],
               ),
             ),
 
