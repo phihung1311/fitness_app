@@ -182,29 +182,56 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.history,
-                  size: 64,
-                  color: Colors.white.withOpacity(0.3),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Chưa có lịch sử món ăn',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header có nút back
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Lịch sử bữa ăn',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 80),
+
+              // Nội dung empty state
+              Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.history,
+                      size: 64,
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Chưa có lịch sử bữa ăn',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
     }
+
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),

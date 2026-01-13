@@ -37,12 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(BuildContext context) {
-    context.read<LoginBloc>().add(
-      LoginSubmitted(
-        email: 'hung@test.com',
-        password: '123456',
-      ),
-    );
+    // context.read<LoginBloc>().add(
+    //   LoginSubmitted(
+    //     email: 'hung@test.com',
+    //     password: '123456',
+    //   ),
+    // );
     // context.read<LoginBloc>().add(
     //   LoginSubmitted(
     //     email: 'haha@gmail.com',
@@ -50,14 +50,14 @@ class _LoginScreenState extends State<LoginScreen> {
     //   ),
     // );hung
 
-    // final valid = _formKey.currentState?.validate() ?? false;
-    //  if (!valid) return;
-    //  context.read<LoginBloc>().add(
-    //   LoginSubmitted(
-    //     email: _emailController.text,
-    //     password: _passwordController.text,
-    //   ),
-    // );
+    final valid = _formKey.currentState?.validate() ?? false;
+     if (!valid) return;
+     context.read<LoginBloc>().add(
+      LoginSubmitted(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ),
+    );
   }
 
   Future<void> _navigateAfterLogin(BuildContext context) async {

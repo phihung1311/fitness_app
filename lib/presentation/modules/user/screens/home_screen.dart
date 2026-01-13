@@ -1,3 +1,4 @@
+import 'package:fitness_app/presentation/modules/user/screens/plan/plan_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injector.dart';
@@ -7,6 +8,8 @@ import '../bloc/meal/meal_bloc.dart';
 import '../bloc/meal/meal_event.dart';
 import '../bloc/exercise/exercise_bloc.dart';
 import '../bloc/exercise/exercise_event.dart';
+import '../bloc/plan/plan_bloc.dart';
+import '../bloc/plan/plan_event.dart';
 import '../bloc/profile_metrics/profile_metrics_bloc.dart';
 import '../bloc/profile_metrics/profile_metrics_event.dart';
 import '../widgets/dashboard_overview.dart';
@@ -34,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _pageTitles = [
     'Tổng quan',
     'Món ăn',
-    'Dinh dưỡng',
+    'Kế hoạch',
     'Bài tập',
     'Cá nhân',
   ];
@@ -49,13 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const FoodLibraryScreen(),
         ),
         BlocProvider(
-          create: (context) => MealBloc(
-            injector(),
-            injector(),
-            injector(),
-            injector(),
-          )..add(LoadTodayMeals()),
-          child: const NutritionScreen(),
+          create: (context) => PlanBloc(injector())..add(LoadUserPlan()),
+          child: const PlanScreen(),
         ),
         MultiBlocProvider(
           providers: [
@@ -116,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 _buildNavItem(0, Icons.home_rounded, 'Trang chủ'),
                 _buildNavItem(1, Icons.restaurant_menu_rounded, 'Món ăn'),
-                _buildNavItem(2, Icons.local_fire_department_rounded, 'Dinh dưỡng'),
+                _buildNavItem(2, Icons.calendar_today_rounded, 'Kế hoạch'),
                 _buildNavItem(3, Icons.fitness_center_rounded, 'Bài tập'),
                 _buildNavItem(4, Icons.person_rounded, 'Cá nhân'),
               ],

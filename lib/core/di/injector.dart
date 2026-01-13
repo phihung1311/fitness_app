@@ -11,6 +11,7 @@ import '../../data/datasources/remote/admin/admin_food_api.dart';
 import '../../data/datasources/remote/admin/admin_exercise_api.dart';
 import '../../data/datasources/remote/admin/admin_user_api.dart';
 import '../../data/datasources/remote/statistics_api.dart';
+import '../../data/datasources/remote/plan_api.dart';
 import '../../data/repositories_impl/auth_repository_impl.dart';
 import '../../data/repositories_impl/profile_repository_impl.dart';
 import '../../data/repositories_impl/food_repository_impl.dart';
@@ -20,6 +21,7 @@ import '../../data/repositories_impl/admin/admin_food_repository_impl.dart';
 import '../../data/repositories_impl/admin/admin_exercise_repository_impl.dart';
 import '../../data/repositories_impl/admin/admin_user_repository_impl.dart';
 import '../../data/repositories_impl/statistics_repository_impl.dart';
+import '../../data/repositories_impl/plan_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/profile_repository.dart';
 import '../../domain/repositories/food_repository.dart';
@@ -29,6 +31,7 @@ import '../../domain/repositories/admin/admin_food_repository.dart';
 import '../../domain/repositories/admin/admin_exercise_repository.dart';
 import '../../domain/repositories/admin/admin_user_repository.dart';
 import '../../domain/repositories/statistics_repository.dart';
+import '../../domain/repositories/plan_repository.dart';
 import '../../domain/usecases/auth/login.dart';
 import '../../domain/usecases/auth/register.dart';
 import '../../domain/usecases/profile/get_profile_metrics.dart';
@@ -55,6 +58,7 @@ import '../../domain/usecases/admin/user/unlock_user.dart' as admin_unlock_user;
 import '../../domain/usecases/admin/user/delete_user.dart' as admin_delete_user;
 import '../../domain/usecases/statistics/get_calories_stats.dart';
 import '../../domain/usecases/statistics/get_weight_prediction.dart';
+import '../../domain/usecases/plan/get_user_plan.dart';
 import '../../services/storage/token_storage.dart';
 import '../../services/storage/role_storage.dart';
 import '../constants/api_endpoints.dart';
@@ -89,6 +93,7 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<AdminExerciseApi>(() => AdminExerciseApi(injector(), injector()))
     ..registerLazySingleton<AdminUserApi>(() => AdminUserApi(injector(), injector()))
     ..registerLazySingleton<StatisticsApi>(() => StatisticsApi(injector(), injector()))
+    ..registerLazySingleton<PlanApi>(() => PlanApi(injector(), injector()))
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(
         api: injector(),
@@ -120,6 +125,9 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<StatisticsRepository>(
       () => StatisticsRepositoryImpl(injector()),
     )
+    ..registerLazySingleton<PlanRepository>(
+      () => PlanRepositoryImpl(injector()),
+    )
     ..registerLazySingleton<LoginUseCase>(() => LoginUseCase(injector()))
     ..registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(injector()))
     ..registerLazySingleton<GetProfileMetrics>(() => GetProfileMetrics(injector()))
@@ -148,6 +156,8 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<admin_delete_user.DeleteUser>(() => admin_delete_user.DeleteUser(injector()))
     // Statistics UseCases
     ..registerLazySingleton<GetCaloriesStats>(() => GetCaloriesStats(injector()))
-    ..registerLazySingleton<GetWeightPrediction>(() => GetWeightPrediction(injector()));
+    ..registerLazySingleton<GetWeightPrediction>(() => GetWeightPrediction(injector()))
+    // Plan UseCases
+    ..registerLazySingleton<GetUserPlan>(() => GetUserPlan(injector()));
 }
 

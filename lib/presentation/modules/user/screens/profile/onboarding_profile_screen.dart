@@ -23,6 +23,7 @@ class _OnboardingProfileScreenState extends State<OnboardingProfileScreen> {
   final _heightCtrl = TextEditingController();
   final _weightCtrl = TextEditingController();
   final _weightGoalCtrl = TextEditingController();
+  final _daysToCompleteCtrl = TextEditingController();
 
   String _gender = 'male';
   String _goalType = 'lose';
@@ -36,6 +37,7 @@ class _OnboardingProfileScreenState extends State<OnboardingProfileScreen> {
     _heightCtrl.dispose();
     _weightCtrl.dispose();
     _weightGoalCtrl.dispose();
+    _daysToCompleteCtrl.dispose();
     super.dispose();
   }
 
@@ -55,6 +57,7 @@ class _OnboardingProfileScreenState extends State<OnboardingProfileScreen> {
         weightGoal: double.parse(_weightGoalCtrl.text.trim()),
         goalType: _goalType,
         activityLevel: _activityLevel,
+        daysToComplete: int.tryParse(_daysToCompleteCtrl.text.trim()),
       );
 
       if (!mounted) return;
@@ -204,6 +207,29 @@ class _OnboardingProfileScreenState extends State<OnboardingProfileScreen> {
                         if (v == null || v.isEmpty) return 'Nhập cân nặng mục tiêu';
                         final n = double.tryParse(v);
                         if (n == null || n <= 0) return 'Cân nặng mục tiêu không hợp lệ';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _buildTextField(
+                      controller: _daysToCompleteCtrl,
+                      label: 'Số ngày muốn hoàn thành',
+                      hint: 'Ví dụ: 30',
+                      keyboardType: TextInputType.number,
+                      validator: (v) {
+                        if (v == null || v.isEmpty) {
+                          return 'Nhập số ngày muốn hoàn thành';
+                        }
+                        final n = int.tryParse(v);
+                        if (n == null || n <= 0) {
+                          return 'Số ngày phải lớn hơn 0';
+                        }
+                        if (n < 7) {
+                          return 'Tối thiểu 7 ngày';
+                        }
+                        if (n > 365) {
+                          return 'Tối đa 365 ngày';
+                        }
                         return null;
                       },
                     ),

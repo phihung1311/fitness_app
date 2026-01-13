@@ -52,6 +52,7 @@ class ProfileApi {
     required double weightGoal,
     required String goalType,
     String activityLevel = 'moderate',
+    int? daysToComplete,
   }) async {
     try {
       final token = _tokenStorage.readToken();
@@ -66,6 +67,7 @@ class ProfileApi {
           'weight_goal': weightGoal,
           'goal_type': goalType,
           'activity_level': activityLevel,
+          if (daysToComplete != null) 'days_to_complete': daysToComplete,
         },
         options: Options(
           headers: {
