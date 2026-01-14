@@ -113,13 +113,25 @@ class _PlanScreenState extends State<PlanScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header
-                      const Text(
-                        'Kế hoạch của bạn',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Kế hoạch của bạn',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.library_books, color: Color(0xFF52C41A)),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/user/template-plans');
+                            },
+                            tooltip: 'Kế hoạch mẫu',
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
 

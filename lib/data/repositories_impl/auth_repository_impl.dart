@@ -54,6 +54,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<AuthSession> googleLogin(String idToken) async {
+    try {
+      final response = await _api.googleLogin(idToken);
+      final session = _mapToSession(response);
+      await saveToken(session.token);
+      return session;
+    } on DioException catch (e) {
+      throw _mapDioError(e);
+    }
+  }
+
+  @override
   Future<void> saveToken(String token) => _tokenStorage.writeToken(token);
 
   AuthSession _mapToSession(AuthResponseDto dto) {

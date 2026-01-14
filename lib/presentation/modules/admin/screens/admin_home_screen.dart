@@ -6,6 +6,7 @@ import '../../auth/screens/login_screen.dart';
 import 'food/admin_food_management_screen.dart';
 import 'exercise/admin_exercise_management_screen.dart';
 import 'user/admin_user_management_screen.dart';
+import 'plan/admin_plan_management_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -76,13 +77,11 @@ class AdminHomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildMenuCard(
               context,
-              icon: Icons.bar_chart,
+              icon: Icons.calendar_today,
               title: 'Quản lý kế hoạch',
-              description: 'Thêm, sửa, xóa kế hoạch',
+              description: 'Tạo và quản lý kế hoạch mẫu',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('chưa')),
-                );
+                Navigator.of(context).pushNamed(AdminPlanManagementScreen.routeName);
               },
             ),
           ],

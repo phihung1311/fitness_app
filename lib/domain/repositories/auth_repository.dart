@@ -11,6 +11,8 @@ abstract class AuthRepository {
     required String password,
   });
 
+  Future<AuthSession> googleLogin(String idToken);
+
   Future<void> saveToken(String token);
 }
 

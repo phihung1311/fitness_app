@@ -24,5 +24,13 @@ class AuthApi {
     );
     return AuthResponseDto.fromJson(response.data ?? {});
   }
+
+  Future<AuthResponseDto> googleLogin(String idToken) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '${ApiEndpoints.baseUrl}/user/account/google-login',
+      data: {'idToken': idToken},
+    );
+    return AuthResponseDto.fromJson(response.data ?? {});
+  }
 }
 

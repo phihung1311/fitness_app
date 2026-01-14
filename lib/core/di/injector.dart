@@ -10,6 +10,7 @@ import '../../data/datasources/remote/exercise_api.dart';
 import '../../data/datasources/remote/admin/admin_food_api.dart';
 import '../../data/datasources/remote/admin/admin_exercise_api.dart';
 import '../../data/datasources/remote/admin/admin_user_api.dart';
+import '../../data/datasources/remote/admin/admin_plan_api.dart';
 import '../../data/datasources/remote/statistics_api.dart';
 import '../../data/datasources/remote/plan_api.dart';
 import '../../data/repositories_impl/auth_repository_impl.dart';
@@ -34,6 +35,7 @@ import '../../domain/repositories/statistics_repository.dart';
 import '../../domain/repositories/plan_repository.dart';
 import '../../domain/usecases/auth/login.dart';
 import '../../domain/usecases/auth/register.dart';
+import '../../domain/usecases/auth/google_login.dart';
 import '../../domain/usecases/profile/get_profile_metrics.dart';
 import '../../domain/usecases/food/get_foods.dart';
 import '../../domain/usecases/meal/add_meal.dart';
@@ -92,6 +94,7 @@ Future<void> setupDependencies() async {
     ..registerLazySingleton<AdminFoodApi>(() => AdminFoodApi(injector(), injector()))
     ..registerLazySingleton<AdminExerciseApi>(() => AdminExerciseApi(injector(), injector()))
     ..registerLazySingleton<AdminUserApi>(() => AdminUserApi(injector(), injector()))
+    ..registerLazySingleton<AdminPlanApi>(() => AdminPlanApi(injector(), injector()))
     ..registerLazySingleton<StatisticsApi>(() => StatisticsApi(injector(), injector()))
     ..registerLazySingleton<PlanApi>(() => PlanApi(injector(), injector()))
     ..registerLazySingleton<AuthRepository>(
@@ -130,6 +133,7 @@ Future<void> setupDependencies() async {
     )
     ..registerLazySingleton<LoginUseCase>(() => LoginUseCase(injector()))
     ..registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(injector()))
+    ..registerLazySingleton<GoogleLoginUseCase>(() => GoogleLoginUseCase(injector()))
     ..registerLazySingleton<GetProfileMetrics>(() => GetProfileMetrics(injector()))
     ..registerLazySingleton<GetFoods>(() => GetFoods(injector()))
     ..registerLazySingleton<AddMeal>(() => AddMeal(injector()))

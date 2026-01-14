@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../services/storage/role_storage.dart';
@@ -8,6 +9,8 @@ import '../../user/screens/home_screen.dart';
 import '../../user/screens/profile/onboarding_profile_screen.dart';
 import '../../admin/screens/admin_home_screen.dart';
 import '../../../../domain/usecases/profile/get_profile_metrics.dart';
+import '../../../../domain/usecases/auth/login.dart';
+import '../../../../domain/usecases/auth/google_login.dart';
 import '../bloc/form_status.dart';
 import '../bloc/login/login_bloc.dart';
 import '../bloc/login/login_event.dart';
@@ -37,27 +40,27 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(BuildContext context) {
-    // context.read<LoginBloc>().add(
-    //   LoginSubmitted(
-    //     email: 'hung@test.com',
-    //     password: '123456',
-    //   ),
-    // );
+    context.read<LoginBloc>().add(
+      LoginSubmitted(
+        email: 'qq@gmail.com',
+        password: '123456',
+      ),
+    );
     // context.read<LoginBloc>().add(
     //   LoginSubmitted(
     //     email: 'haha@gmail.com',
     //     password: '123456',
     //   ),
-    // );hung
+    // );
 
-    final valid = _formKey.currentState?.validate() ?? false;
-     if (!valid) return;
-     context.read<LoginBloc>().add(
-      LoginSubmitted(
-        email: _emailController.text,
-        password: _passwordController.text,
-      ),
-    );
+    // final valid = _formKey.currentState?.validate() ?? false;
+    //  if (!valid) return;
+    //  context.read<LoginBloc>().add(
+    //   LoginSubmitted(
+    //     email: _emailController.text,
+    //     password: _passwordController.text,
+    //   ),
+    // );
   }
 
   Future<void> _navigateAfterLogin(BuildContext context) async {
@@ -108,7 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LoginBloc(injector()),
+      create: (_) => LoginBloc(
+        injector<LoginUseCase>(),
+        injector<GoogleLoginUseCase>(),
+      ),
       child: Scaffold(
         body: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
@@ -367,18 +373,47 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ),
                               child: ElevatedButton(
-                                onPressed: isLoading
+                                onPressed: state.status == FormStatus.loading
                                     ? null
-                                    : () {
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Chưa'),
-                                      backgroundColor: Colors.orange,
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                },
+                                    : () async {
+                                        try {
+                                          const String serverClientId = '492505818495-dkdhnmbo411blrbvgaiunkahub054bki.apps.googleusercontent.com';
+                                          
+                                          final GoogleSignIn googleSignIn = GoogleSignIn(
+                                            scopes: ['email', 'profile'],
+                                            serverClientId: serverClientId,
+                                          );
+                                          
+                                          final GoogleSignInAccount? account = await googleSignIn.signIn();
+                                          
+                                          if (account != null) {
+                                            final GoogleSignInAuthentication auth = await account.authentication;
+                                            final String? idToken = auth.idToken;
+                                            
+                                            if (idToken != null && mounted) {
+                                              context.read<LoginBloc>().add(
+                                                    GoogleLoginSubmitted(idToken),
+                                                  );
+                                            } else if (mounted) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Không thể lấy Google token'),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        } catch (e) {
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Lỗi đăng nhập Google: ${e.toString()}'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
                                   shadowColor: Colors.transparent,

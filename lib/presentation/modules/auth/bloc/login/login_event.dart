@@ -17,3 +17,11 @@ class LoginSubmitted extends LoginEvent {
   List<Object?> get props => [email, password];
 }
 
+class GoogleLoginSubmitted extends LoginEvent {
+  const GoogleLoginSubmitted(this.idToken);
+
+  final String idToken;
+
+  @override
+  List<Object?> get props => [idToken];
+}
