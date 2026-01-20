@@ -171,8 +171,7 @@ class AdminPlanApi {
     }
   }
 
-  // ========== MEAL PLAN FOODS ==========
-  // Add food to meal plan
+
   Future<Map<String, dynamic>> addFoodToMealPlan({
     required int mealPlanId,
     required int foodId,
@@ -202,7 +201,6 @@ class AdminPlanApi {
     }
   }
 
-  // Update food in meal plan
   Future<Map<String, dynamic>> updateFoodInMealPlan({
     required int mealPlanId,
     required int foodId,
@@ -231,7 +229,6 @@ class AdminPlanApi {
     }
   }
 
-  // Delete food from meal plan
   Future<void> deleteFoodFromMealPlan({
     required int mealPlanId,
     required int foodId,
@@ -265,8 +262,7 @@ class AdminPlanApi {
     }
   }
 
-  // ========== WORKOUT PLAN EXERCISES ==========
-  // Add exercise to workout plan
+
   Future<Map<String, dynamic>> addExerciseToWorkoutPlan({
     required int workoutPlanId,
     required int exerciseId,
@@ -300,7 +296,6 @@ class AdminPlanApi {
     }
   }
 
-  // Update exercise in workout plan
   Future<Map<String, dynamic>> updateExerciseInWorkoutPlan({
     required int workoutPlanId,
     required int exerciseId,
@@ -333,7 +328,6 @@ class AdminPlanApi {
     }
   }
 
-  // Delete exercise from workout plan
   Future<void> deleteExerciseFromWorkoutPlan({
     required int workoutPlanId,
     required int exerciseId,

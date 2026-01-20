@@ -323,22 +323,10 @@ class _AdminPlanManagementScreenState extends State<AdminPlanManagementScreen> {
                       levelLabels[level] ?? level,
                       Colors.blue,
                     ),
-                  if (targetWeightChange != null)
-                    _buildChip(
-                      targetWeightChange > 0
-                          ? '+${targetWeightChange} kg'
-                          : '${targetWeightChange} kg',
-                      Colors.orange,
-                    ),
                   if (durationDays != null)
                     _buildChip(
                       '$durationDays ngày',
                       Colors.purple,
-                    ),
-                  if (plan['target_calories'] != null)
-                    _buildChip(
-                      '${plan['target_calories']} kcal',
-                      Colors.red,
                     ),
                 ],
               ),

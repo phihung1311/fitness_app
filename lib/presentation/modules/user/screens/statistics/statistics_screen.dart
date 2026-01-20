@@ -63,8 +63,8 @@ class StatisticsScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   
                   // Weight Prediction
-                  if (state.weightPrediction != null)
-                    _buildWeightPrediction(context, state.weightPrediction!),
+                  // if (state.weightPrediction != null)
+                  //   _buildWeightPrediction(context, state.weightPrediction!),
                   
                   if (state.errorMessage != null)
                     Padding(
@@ -103,16 +103,16 @@ class StatisticsScreen extends StatelessWidget {
           }
         },
         style: SegmentedButton.styleFrom(
-          backgroundColor: Colors.grey.shade900.withOpacity(0.8), // Nền nút không chọn: xám rất tối, hơi trong suốt để hòa với background
-          selectedBackgroundColor: const Color(0xFF52C41A), // Nền nút chọn: xanh lá nổi bật
-          foregroundColor: Colors.white, // Chữ luôn trắng
-          selectedForegroundColor: Colors.black87, // Chữ trên nút chọn: đen đậm để tương phản tốt với nền xanh
+          backgroundColor: Colors.grey.shade900.withOpacity(0.8),
+          selectedBackgroundColor: const Color(0xFF52C41A),
+          foregroundColor: Colors.white,
+          selectedForegroundColor: Colors.black87,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30), // Bo tròn mạnh hơn, giống capsule/pill shape
-            side: const BorderSide(color: Color(0xFF52C41A), width: 1.5), // Viền xanh lá nhẹ quanh toàn bộ segmented button
+            borderRadius: BorderRadius.circular(30),
+            side: const BorderSide(color: Color(0xFF52C41A), width: 1.5),
           ),
-          elevation: 4, // Thêm bóng nhẹ để nổi lên
+          elevation: 4, // Thêm bóng
           shadowColor: Colors.black.withOpacity(0.4),
         ),
         showSelectedIcon: false,
@@ -124,9 +124,6 @@ class StatisticsScreen extends StatelessWidget {
   Widget _buildCaloriesChart(BuildContext context, caloriesStats) {
     final dailyData = caloriesStats.dailyData;
     final summary = caloriesStats.summary;
-
-    // Luôn hiển thị biểu đồ và summary, kể cả khi không có dữ liệu
-    // (dailyData sẽ có tất cả các ngày với giá trị 0)
 
     return Card(
       color: const Color(0xFF1C1E1D),

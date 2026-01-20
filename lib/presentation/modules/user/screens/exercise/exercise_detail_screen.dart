@@ -745,7 +745,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen>
                     ),
                     SizedBox(width: 12),
                     Text(
-                      'Thêm vào kế hoạch',
+                      'Thêm vào tập luyện',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -777,7 +777,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Thêm bài tập vào...',
+              'Thêm bài tập vào',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -797,16 +797,16 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen>
             ),
             const SizedBox(height: 12),
             // Option 2: Chọn ngày khác
-            _buildAddOption(
-              icon: Icons.calendar_today_rounded,
-              title: 'Chọn ngày khác',
-              subtitle: 'Lên lịch cho ngày khác',
-              onTap: () {
-                Navigator.pop(context);
-                _selectDateAndAdd();
-              },
-            ),
-            const SizedBox(height: 12),
+            // _buildAddOption(
+            //   icon: Icons.calendar_today_rounded,
+            //   title: 'Chọn ngày khác',
+            //   subtitle: 'Lên lịch cho ngày khác',
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     _selectDateAndAdd();
+            //   },
+            // ),
+            // const SizedBox(height: 12),
             // Option 3: Yêu thích
             _buildAddOption(
               icon: Icons.star_outline_rounded,

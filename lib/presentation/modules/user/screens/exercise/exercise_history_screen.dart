@@ -30,19 +30,15 @@ class _ExerciseHistoryScreenState extends State<ExerciseHistoryScreen> {
 
     try {
       final exerciseApi = injector<ExerciseApi>();
-      // Normalize date - đảm bảo format yyyy-MM-dd (local date, không có timezone)
       final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate);
-      print('📅 Loading history for date: $dateStr');
       
       final response = await exerciseApi.getExerciseHistory(dateStr);
-      print('✅ Received response: ${response['exercises']?.length ?? 0} exercises');
       
       setState(() {
         _historyData = response;
         _isLoading = false;
       });
     } catch (e) {
-      print('❌ Error loading history: $e');
       setState(() {
         _errorMessage = e.toString();
         _isLoading = false;
@@ -262,17 +258,17 @@ class _ExerciseHistoryScreenState extends State<ExerciseHistoryScreen> {
                 height: 40,
                 color: Colors.white.withOpacity(0.1),
               ),
-              _buildSummaryItem(
-                icon: Icons.timer_outlined,
-                label: 'Thời gian',
-                value: '$totalDuration phút',
-                color: const Color(0xFF52C41A),
-              ),
-              Container(
-                width: 1,
-                height: 40,
-                color: Colors.white.withOpacity(0.1),
-              ),
+              // _buildSummaryItem(
+              //   icon: Icons.timer_outlined,
+              //   label: 'Thời gian',
+              //   value: '$totalDuration phút',
+              //   color: const Color(0xFF52C41A),
+              // ),
+              // Container(
+              //   width: 1,
+              //   height: 40,
+              //   color: Colors.white.withOpacity(0.1),
+              // ),
               _buildSummaryItem(
                 icon: Icons.fitness_center_rounded,
                 label: 'Bài tập',

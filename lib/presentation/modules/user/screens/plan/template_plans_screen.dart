@@ -266,13 +266,6 @@ class _TemplatePlansScreenState extends State<TemplatePlansScreen> {
                       levelLabels[level] ?? level,
                       Colors.blue,
                     ),
-                  if (targetWeightChange != null)
-                    _buildChip(
-                      targetWeightChange > 0
-                          ? '+${targetWeightChange.toStringAsFixed(1)} kg'
-                          : '${targetWeightChange.toStringAsFixed(1)} kg',
-                      Colors.orange,
-                    ),
                   if (durationDays != null)
                     _buildChip(
                       '$durationDays ngày',

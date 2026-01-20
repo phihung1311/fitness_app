@@ -51,6 +51,8 @@ hoặc
 //   ),
 //   const SizedBox(width: ,)
 // ],
+
+
 class _Identity extends StatelessWidget {
 const _Identity({required this.name, required this.email});
 

@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import '../../../../../core/di/injector.dart';
 import '../../../../../data/datasources/remote/meal_api.dart';
 import '../../../../../domain/entities/user_meal.dart';
+import '../../../../../domain/usecases/meal/update_meal.dart';
+import '../../../../../domain/usecases/meal/delete_meal.dart';
 
 class MealHistoryScreen extends StatefulWidget {
   const MealHistoryScreen({super.key});
@@ -13,6 +15,9 @@ class MealHistoryScreen extends StatefulWidget {
 
 class _MealHistoryScreenState extends State<MealHistoryScreen> {
   final MealApi _mealApi = injector<MealApi>();
+  final UpdateMeal _updateMeal = injector<UpdateMeal>();
+  final DeleteMeal _deleteMeal = injector<DeleteMeal>();
+
   List<UserMeal> _allMeals = [];
   bool _isLoading = false;
   String? _errorMessage;
@@ -31,7 +36,6 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
     });
 
     try {
-      // Lấy tất cả meals
       final meals = await _mealApi.getMealsByDate('');
       setState(() {
         _allMeals = meals.map((dto) => dto.toEntity()).toList();
@@ -95,6 +99,210 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
     }
   }
 
+  void _showEditDialog(UserMeal meal) {
+    final controller = TextEditingController(text: meal.weightGrams.toString());
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1E1D),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Chỉnh sửa khối lượng',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              meal.food?.name ?? '',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              autofocus: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Khối lượng (gram)',
+                labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+                suffixText: 'g',
+                suffixStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF52C41A),
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              'Hủy',
+              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newWeight = int.tryParse(controller.text);
+              if (newWeight != null && newWeight > 0) {
+                Navigator.pop(dialogContext);
+
+                setState(() => _isLoading = true);
+
+                try {
+                  await _updateMeal(
+                    mealId: meal.id!,
+                    weightGrams: newWeight,
+                  );
+
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Đã cập nhật món ăn'),
+                        backgroundColor: Color(0xFF52C41A),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+
+                  await _loadMealHistory();
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Lỗi: ${e.toString()}'),
+                        backgroundColor: Colors.red,
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
+                  }
+                  setState(() => _isLoading = false);
+                }
+              } else {
+                ScaffoldMessenger.of(dialogContext).showSnackBar(
+                  const SnackBar(
+                    content: Text('Vui lòng nhập số gram hợp lệ'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF52C41A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: const Text(
+              'Lưu',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(UserMeal meal) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1E1D),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          'Xác nhận xóa',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          'Bạn có chắc muốn xóa "${meal.food?.name ?? 'món ăn này'}" khỏi lịch sử?',
+          style: TextStyle(color: Colors.white.withOpacity(0.7)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              'Hủy',
+              style: TextStyle(color: Colors.white.withOpacity(0.7)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+
+              setState(() => _isLoading = true);
+
+              try {
+                await _deleteMeal(meal.id!);
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Đã xóa món ăn'),
+                      backgroundColor: Color(0xFF52C41A),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+
+                await _loadMealHistory();
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Lỗi: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                      duration: const Duration(seconds: 3),
+                    ),
+                  );
+                }
+                setState(() => _isLoading = false);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: const Text(
+              'Xóa',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Map<String, List<UserMeal>> _groupMealsByDate() {
     final Map<String, List<UserMeal>> grouped = {};
     for (final meal in _allMeals) {
@@ -107,10 +315,7 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
       if (!grouped.containsKey(date)) {
         grouped[date] = <UserMeal>[];
       }
-      final dateList = grouped[date];
-      if (dateList != null) {
-        dateList.add(meal);
-      }
+      grouped[date]!.add(meal);
     }
     return grouped;
   }
@@ -124,10 +329,7 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
     };
     for (final meal in meals) {
       final session = meal.mealSession ?? 'snack';
-      final sessionList = grouped[session];
-      if (sessionList != null) {
-        sessionList.add(meal);
-      }
+      grouped[session]?.add(meal);
     }
     return grouped;
   }
@@ -150,14 +352,30 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Colors.red.withOpacity(0.7),
+              ),
+              const SizedBox(height: 16),
               Text(
                 'Lỗi: $_errorMessage',
                 style: const TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
                 onPressed: _loadMealHistory,
-                child: const Text('Thử lại'),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Thử lại'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF52C41A),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                ),
               ),
             ],
           ),
@@ -175,86 +393,30 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
   Widget _buildContent() {
     final groupedByDate = _groupMealsByDate();
     final sortedDates = groupedByDate.keys.toList()
-      ..sort((a, b) => b.compareTo(a)); // Mới nhất trước
+      ..sort((a, b) => b.compareTo(a));
 
     if (sortedDates.isEmpty) {
-      return SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header có nút back
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Lịch sử bữa ăn',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 80),
-
-              // Nội dung empty state
-              Center(
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.history,
-                      size: 64,
-                      color: Colors.white.withOpacity(0.3),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Chưa có lịch sử bữa ăn',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+      return _buildEmptyState();
     }
 
-
-    return SingleChildScrollView(
+    return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with back button
-            Row(
+      slivers: [
+        // Header
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
                         'Lịch sử món ăn',
                         style: TextStyle(
                           color: Colors.white,
@@ -262,83 +424,163 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _buildSummaryCard(),
+                const SizedBox(height: 24),
+              ],
+            ),
+          ),
+        ),
+
+        // Meals by date
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                final date = sortedDates[index];
+                final meals = groupedByDate[date]!;
+                final groupedBySession = _groupMealsBySession(meals);
+                final totalCalories = _calculateTotalCalories(meals);
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _buildDateSection(
+                    date,
+                    totalCalories,
+                    groupedBySession,
+                  ),
+                );
+              },
+              childCount: sortedDates.length,
+            ),
+          ),
+        ),
+
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Lịch sử bữa ăn',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-
-            // Summary info
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1C1E1D),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.1),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            const SizedBox(height: 80),
+            Center(
+              child: Column(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Tổng số món: ${_allMeals.length}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Tổng calo: ${_calculateTotalCalories(_allMeals)} kcal',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
+                  Icon(
+                    Icons.history,
+                    size: 80,
+                    color: Colors.white.withOpacity(0.3),
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.calendar_today,
-                      color: Color(0xFF52C41A),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Chưa có lịch sử bữa ăn',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
                     ),
-                    onPressed: _selectDate,
-                    tooltip: 'Lọc theo ngày',
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Bắt đầu thêm món ăn vào nhật ký của bạn',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
-
-            // Meals grouped by date
-            ...sortedDates.map((date) {
-              final meals = groupedByDate[date]!;
-              final groupedBySession = _groupMealsBySession(meals);
-              final totalCalories = _calculateTotalCalories(meals);
-
-              return _buildDateSection(
-                date,
-                totalCalories,
-                groupedBySession,
-              );
-            }).toList(),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildSummaryCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C1E1D),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Tổng số món: ${_allMeals.length}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Tổng calo: ${_calculateTotalCalories(_allMeals)} kcal',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.calendar_today,
+              color: Color(0xFF52C41A),
+              size: 24,
+            ),
+            onPressed: _selectDate,
+            tooltip: 'Lọc theo ngày',
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDateSection(
-    String date,
-    int totalCalories,
-    Map<String, List<UserMeal>> groupedBySession,
-  ) {
+      String date,
+      int totalCalories,
+      Map<String, List<UserMeal>> groupedBySession,
+      ) {
     DateTime? dateTime;
     try {
       dateTime = DateFormat('yyyy-MM-dd').parse(date);
@@ -346,14 +588,14 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
       dateTime = DateTime.now();
     }
 
-    // Extract meal lists outside of children list
     final breakfastMeals = groupedBySession['breakfast'] ?? [];
     final lunchMeals = groupedBySession['lunch'] ?? [];
     final dinnerMeals = groupedBySession['dinner'] ?? [];
     final snackMeals = groupedBySession['snack'] ?? [];
+    final totalMeals = breakfastMeals.length + lunchMeals.length +
+        dinnerMeals.length + snackMeals.length;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1E1D),
@@ -366,30 +608,31 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Date header with total calories
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _formatDateVietnamese(dateTime),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _formatDateVietnamese(dateTime),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${breakfastMeals.length + lunchMeals.length + dinnerMeals.length + snackMeals.length} món',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
-                      fontSize: 12,
+                    const SizedBox(height: 4),
+                    Text(
+                      '$totalMeals món',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -414,50 +657,32 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(color: Color(0xFF2A2C2B)),
+          const Divider(color: Color(0xFF2A2C2B), height: 1),
           const SizedBox(height: 16),
-
-          // Meal sessions
           if (breakfastMeals.isNotEmpty) ...[
-            _buildMealSession(
-              'Bữa sáng',
-              Icons.wb_sunny,
-              breakfastMeals,
-            ),
+            _buildMealSession('Bữa sáng', Icons.wb_sunny, breakfastMeals),
             const SizedBox(height: 12),
           ],
           if (lunchMeals.isNotEmpty) ...[
-            _buildMealSession(
-              'Bữa trưa',
-              Icons.lunch_dining,
-              lunchMeals,
-            ),
+            _buildMealSession('Bữa trưa', Icons.lunch_dining, lunchMeals),
             const SizedBox(height: 12),
           ],
           if (dinnerMeals.isNotEmpty) ...[
-            _buildMealSession(
-              'Bữa tối',
-              Icons.dinner_dining,
-              dinnerMeals,
-            ),
+            _buildMealSession('Bữa tối', Icons.dinner_dining, dinnerMeals),
             const SizedBox(height: 12),
           ],
           if (snackMeals.isNotEmpty)
-            _buildMealSession(
-              'Bữa phụ',
-              Icons.cookie,
-              snackMeals,
-            ),
+            _buildMealSession('Bữa phụ', Icons.cookie, snackMeals),
         ],
       ),
     );
   }
 
   Widget _buildMealSession(
-    String title,
-    IconData icon,
-    List<UserMeal> meals,
-  ) {
+      String title,
+      IconData icon,
+      List<UserMeal> meals,
+      ) {
     final sessionCalories = _calculateTotalCalories(meals);
 
     return Container(
@@ -525,16 +750,13 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
         border: Border.all(color: const Color(0xFF2A2C2B)),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Food Image
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: _buildFoodImage(food.imageUrl),
           ),
           const SizedBox(width: 12),
-
-          // Food Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,6 +768,8 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -558,6 +782,51 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
               ],
             ),
           ),
+          const SizedBox(width: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => _showEditDialog(meal),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF52C41A).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.edit,
+                      size: 18,
+                      color: Color(0xFF52C41A),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => _showDeleteConfirmation(meal),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.delete,
+                      size: 18,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -568,18 +837,16 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
       return _buildPlaceholderImage();
     }
 
-    // Case 1: Full URL
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       return Image.network(
         imageUrl,
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 60,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
       );
     }
 
-    // Case 2: Server upload path
     if (imageUrl.startsWith('/uploads/')) {
       const baseUrl = String.fromEnvironment(
         'API_BASE_URL',
@@ -589,21 +856,20 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
       final fullUrl = '$serverUrl$imageUrl';
       return Image.network(
         fullUrl,
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 60,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
       );
     }
 
-    // Case 3: Asset
     final assetPath = imageUrl.contains('assets/')
         ? imageUrl
         : 'assets/images/foods/$imageUrl';
     return Image.asset(
       assetPath,
-      width: 50,
-      height: 50,
+      width: 60,
+      height: 60,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
     );
@@ -611,14 +877,17 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
 
   Widget _buildPlaceholderImage() {
     return Container(
-      width: 50,
-      height: 50,
-      color: const Color(0xFF2A2C2B),
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2C2B),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Center(
         child: Icon(
           Icons.restaurant,
           color: Colors.white.withOpacity(0.3),
-          size: 20,
+          size: 24,
         ),
       ),
     );
@@ -638,4 +907,3 @@ class _MealHistoryScreenState extends State<MealHistoryScreen> {
     return '$weekday, ${DateFormat('dd/MM/yyyy').format(date)}';
   }
 }
-

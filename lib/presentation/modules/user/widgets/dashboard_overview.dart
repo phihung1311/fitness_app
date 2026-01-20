@@ -216,7 +216,7 @@ class DashboardOverview extends StatelessWidget {
                                     ),
                                     SizedBox(width: 8),
                                     Text(
-                                      'Calories',
+                                      'Tổng Calories',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
