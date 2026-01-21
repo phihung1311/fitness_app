@@ -3,6 +3,7 @@ import '../../../core/constants/api_endpoints.dart';
 import '../../../services/storage/token_storage.dart';
 import '../../dtos/calories_stats_dto.dart';
 import '../../dtos/weight_prediction_dto.dart';
+import '../../dtos/bmi_history_dto.dart';
 
 class StatisticsApi {
   final Dio _dio;
@@ -42,6 +43,31 @@ class StatisticsApi {
         throw Exception('Lỗi lấy thống kê calories: $errorMessage');
       }
       throw Exception('Lỗi lấy thống kê calories: ${e.message}');
+    }
+  }
+
+  // Lấy BMI history theo ngày
+  Future<BMIHistoryDto> getBMIHistory({int days = 7}) async {
+    try {
+      final token = _tokenStorage.readToken();
+      final response = await _dio.get(
+        '${ApiEndpoints.baseUrl}/user/stats/bmi-history',
+        queryParameters: {'days': days},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      return BMIHistoryDto.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorMessage = e.response?.data['error'] ??
+            e.response?.data['message'] ??
+            e.message;
+        throw Exception('Lỗi lấy lịch sử BMI: $errorMessage');
+      }
+      throw Exception('Lỗi lấy lịch sử BMI: ${e.message}');
     }
   }
 

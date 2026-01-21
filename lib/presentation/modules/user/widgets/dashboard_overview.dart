@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../data/datasources/remote/exercise_api.dart';
 import '../../../../data/datasources/remote/meal_api.dart';
+import '../../../../data/datasources/remote/statistics_api.dart';
 import '../../../../data/dtos/exercise_dto.dart';
 import '../../../../data/dtos/food_dto.dart';
 import '../bloc/profile_metrics/profile_metrics_bloc.dart';
@@ -37,6 +40,7 @@ class DashboardOverview extends StatelessWidget {
             builder: (context, state) {
               final metrics = state.metrics;
               final targetCalories = metrics?.calorieGoal ?? 2000;
+
               
               // Load tổng calories hôm nay
               return FutureBuilder<Map<String, dynamic>>(
@@ -110,6 +114,13 @@ class DashboardOverview extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
+
+                    const SizedBox(height: 24),
+                    // BMI Chart
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _buildBMIChart(),
                     ),
 
                     const SizedBox(height: 24),
@@ -473,6 +484,183 @@ class DashboardOverview extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBMIChart() {
+    return FutureBuilder(
+      future: injector<StatisticsApi>().getBMIHistory(days: 7),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1C1E1D),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFF2A2C2B),
+                width: 1,
+              ),
+            ),
+            height: 200,
+            child: const Center(
+              child: CircularProgressIndicator(color: Color(0xFF52C41A)),
+            ),
+          );
+        }
+
+        if (snapshot.hasError || !snapshot.hasData) {
+          return const SizedBox.shrink();
+        }
+
+        final bmiHistory = snapshot.data!.toEntity();
+        final dailyData = bmiHistory.dailyData;
+        final summary = bmiHistory.summary;
+
+        if (dailyData.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        // Tìm min và max BMI để set scale
+        final bmiValues = dailyData.map((d) => d.bmi).toList();
+        final minBMI = bmiValues.reduce((a, b) => a < b ? a : b);
+        final maxBMI = bmiValues.reduce((a, b) => a > b ? a : b);
+        final range = maxBMI - minBMI;
+        final minY = (minBMI - range * 0.1).clamp(0.0, double.infinity);
+        final maxY = maxBMI + range * 0.1;
+
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1C1E1D),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: const Color(0xFF2A2C2B),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Biểu đồ BMI',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (summary.currentBMI != null)
+                    Text(
+                      'BMI: ${summary.currentBMI!.toStringAsFixed(1)}',
+                      style: const TextStyle(
+                        color: Color(0xFF52C41A),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 180,
+                child: LineChart(
+                  LineChartData(
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      horizontalInterval: range > 0 ? range / 4 : 1,
+                      getDrawingHorizontalLine: (value) {
+                        return FlLine(
+                          color: const Color(0xFF2A2C2B),
+                          strokeWidth: 1,
+                        );
+                      },
+                    ),
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 40,
+                          getTitlesWidget: (value, meta) {
+                            return Text(
+                              value.toStringAsFixed(1),
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 30,
+                          getTitlesWidget: (value, meta) {
+                            if (value.toInt() >= 0 && value.toInt() < dailyData.length) {
+                              final date = dailyData[value.toInt()].date;
+                              final dateObj = DateTime.tryParse(date);
+                              if (dateObj != null) {
+                                return Text(
+                                  DateFormat('dd/MM').format(dateObj),
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                );
+                              }
+                            }
+                            return const Text('');
+                          },
+                          interval: dailyData.length > 7 ? 2 : 1,
+                        ),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                    ),
+                    borderData: FlBorderData(show: false),
+                    minY: minY,
+                    maxY: maxY,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: dailyData.asMap().entries.map<FlSpot>((e) {
+                          return FlSpot(e.key.toDouble(), e.value.bmi);
+                        }).toList(),
+                        isCurved: true,
+                        color: const Color(0xFF52C41A),
+                        barWidth: 3,
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, barData, index) {
+                            return FlDotCirclePainter(
+                              radius: 4,
+                              color: const Color(0xFF52C41A),
+                              strokeWidth: 2,
+                              strokeColor: Colors.white,
+                            );
+                          },
+                        ),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          color: const Color(0xFF52C41A).withOpacity(0.1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

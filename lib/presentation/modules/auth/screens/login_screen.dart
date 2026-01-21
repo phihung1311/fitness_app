@@ -40,18 +40,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(BuildContext context) {
-    context.read<LoginBloc>().add(
-      LoginSubmitted(
-        email: 'qq@gmail.com',
-        password: '123456',
-      ),
-    );
     // context.read<LoginBloc>().add(
     //   LoginSubmitted(
-    //     email: 'haha@gmail.com',
+    //     email: 'qq@gmail.com',
     //     password: '123456',
     //   ),
     // );
+    context.read<LoginBloc>().add(
+      LoginSubmitted(
+        email: 'haha@gmail.com',
+        password: '123456',
+      ),
+    );
 
     // final valid = _formKey.currentState?.validate() ?? false;
     //  if (!valid) return;
